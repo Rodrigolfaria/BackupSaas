@@ -142,7 +142,7 @@ DATABASES = {
     'default': dj_database_url.config(
         default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
         conn_max_age=600,
-        ssl_require=not DEBUG,
+        ssl_require=env_bool("DATABASE_SSL_REQUIRE", bool(RENDER_HOSTNAME)),
     )
 }
 
@@ -333,5 +333,4 @@ MERCADO_PAGO_ACCESS_TOKEN = os.getenv("MP_ACCESS_TOKEN")
 
 # Caso queira usar a Public Key no front-end via context processor depois
 MERCADO_PAGO_PUBLIC_KEY = "APP_USR-909cc07b-ca8e-42dd-a164-11a3eb264460"
-
 
