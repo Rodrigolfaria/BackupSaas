@@ -50,8 +50,8 @@ if RENDER_HOSTNAME:
     CSRF_TRUSTED_ORIGINS.append(f"https://{RENDER_HOSTNAME}")
 
 # Configurações de Cookies e Headers de Proxy (VITAL para o Render)
-SESSION_COOKIE_SECURE = not DEBUG
-CSRF_COOKIE_SECURE = not DEBUG
+SESSION_COOKIE_SECURE = env_bool("SESSION_COOKIE_SECURE", not DEBUG)
+CSRF_COOKIE_SECURE = env_bool("CSRF_COOKIE_SECURE", not DEBUG)
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 
@@ -333,4 +333,3 @@ MERCADO_PAGO_ACCESS_TOKEN = os.getenv("MP_ACCESS_TOKEN")
 
 # Caso queira usar a Public Key no front-end via context processor depois
 MERCADO_PAGO_PUBLIC_KEY = "APP_USR-909cc07b-ca8e-42dd-a164-11a3eb264460"
-
