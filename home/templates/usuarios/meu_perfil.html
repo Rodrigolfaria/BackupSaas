@@ -1,0 +1,161 @@
+{% extends 'home/base.html' %}
+
+{% block title %}Meu Perfil | {{ user.username }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid pt-4 pb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+
+            <div class="d-flex align-items-center mb-4">
+                <h4 class="fw-bold text-dark mb-0">Configurações de Perfil</h4>
+                <span class="badge bg-primary ms-3 rounded-pill">Conta</span>
+            </div>
+
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="card border-0 shadow-sm rounded-4 text-center p-4">
+                            <div class="position-relative d-inline-block mx-auto mb-3">
+                                <div class="profile-preview-container">
+                                    {% if user.profile.foto %}
+                                    <img src="{{ user.profile.foto.url }}" id="imgPreview" class="profile-img-large">
+                                    {% else %}
+                                    <div id="imgPlaceholder" class="profile-placeholder">
+                                        <i class="bi bi-person text-muted"></i>
+                                    </div>
+                                    <img src="" id="imgPreview" class="profile-img-large d-none">
+                                    {% endif %}
+                                </div>
+                                <label for="fotoInput"
+                                    class="btn btn-sm btn-primary position-absolute bottom-0 end-0 rounded-circle shadow">
+                                    <i class="bi bi-camera"></i>
+                                </label>
+                                <input type="file" name="foto" id="fotoInput" class="d-none" accept="image/*">
+                            </div>
+
+                            <h6 class="fw-bold mb-1">{{ user.get_full_name|default:user.username }}</h6>
+                            <div class="badge bg-light text-primary border mb-3">{{ user.profile.get_cargo_display }}
+                            </div>
+
+                            <div class="pt-3 border-top text-start">
+                                <small class="text-muted fw-bold d-block mb-2">STATUS DA CONTA</small>
+                                {% if user.profile.ativo %}
+                                <span class="text-success small"><i class="bi bi-check-circle-fill me-1"></i> Usuário
+                                    Ativo</span>
+                                {% else %}
+                                <span class="text-danger small"><i class="bi bi-x-circle-fill me-1"></i> Inativo</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-8">
+                        <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                            <h6 class="fw-bold mb-3">Informações Pessoais</h6>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold small text-muted">NOME</label>
+                                    <input type="text" name="first_name" class="form-control rounded-3"
+                                        value="{{ user.first_name }}">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold small text-muted">SOBRENOME</label>
+                                    <input type="text" name="last_name" class="form-control rounded-3"
+                                        value="{{ user.last_name }}">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label fw-bold small text-muted">E-MAIL (USER)</label>
+                                    <input type="email" name="email" class="form-control rounded-3 bg-light"
+                                        value="{{ user.email }}" readonly>
+                                    <small class="text-muted">O e-mail é vinculado à sua conta principal.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card border-0 shadow-sm rounded-4 p-4">
+                            <h6 class="fw-bold mb-3"><i class="bi bi-google me-2 text-danger"></i>Integração Google</h6>
+                            <div
+                                class="p-3 rounded-3 {% if user.profile.google_refresh_token %}bg-light-success{% else %}bg-light{% endif %} border border-dashed text-center">
+                                {% if user.profile.google_refresh_token %}
+                                <p class="text-success small mb-0 fw-bold">
+                                    <i class="bi bi-calendar-check-fill me-2"></i>Sua agenda está conectada ao Google
+                                    Calendar!
+                                </p>
+                                {% else %}
+                                <p class="text-muted small mb-0">
+                                    Integração pendente. Procure o administrador para vincular sua agenda.
+                                </p>
+                                {% endif %}
+                            </div>
+
+                            <div class="mt-4 pt-3 border-top d-flex gap-2">
+                                <button type="submit" class="btn btn-primary px-4 rounded-pill fw-bold">
+                                    Salvar Alterações
+                                </button>
+                                <a href="{% url 'dashboard' %}"
+                                    class="btn btn-light px-4 rounded-pill fw-bold">Cancelar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .profile-preview-container {
+        width: 140px;
+        height: 140px;
+        border-radius: 50% !important;
+        /* Totalmente redondo */
+        overflow: hidden;
+        background: #f8f9fa;
+        border: 5px solid #fff;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .profile-img-large {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .profile-placeholder {
+        font-size: 4rem;
+        color: #adb5bd;
+    }
+
+    .bg-light-success {
+        background-color: #f0fff4;
+        border-color: #c6f6d5 !important;
+    }
+
+    .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 4px rgba(37, 170, 226, 0.1);
+    }
+</style>
+
+<script>
+    document.getElementById('fotoInput').onchange = evt => {
+        const [file] = evt.target.files;
+        if (file) {
+            const preview = document.getElementById('imgPreview');
+            const placeholder = document.getElementById('imgPlaceholder');
+            const url = URL.createObjectURL(file);
+            if (preview) {
+                preview.src = url;
+                preview.classList.remove('d-none');
+                if (placeholder) placeholder.style.display = 'none';
+            }
+        }
+    }
+</script>
+{% endblock %}

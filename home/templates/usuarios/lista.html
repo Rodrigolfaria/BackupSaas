@@ -1,0 +1,152 @@
+{% extends 'home/base.html' %}
+
+{% block title %}Gestão de Usuários | OdontoClinics{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4 px-md-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4 px-3">
+        <div>
+            <h3 class="fw-bold text-dark mb-0">Gestão de Equipe</h3>
+            <p class="text-muted small mb-0 d-none d-md-block">Controle de acessos e permissões dos colaboradores.</p>
+        </div>
+        <a href="{% url 'criar_usuario' %}" class="btn btn-primary shadow-sm rounded-pill px-4 fw-bold py-2" 
+           style="width: auto !important; min-width: fit-content;">
+            <i class="bi bi-person-plus-fill me-md-2"></i> 
+            <span class="d-none d-md-inline">Adicionar Membro</span>
+            <span class="d-md-none">Novo</span>
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden mx-3 mb-5">
+        <div class="card-body p-0">
+            
+            <div class="table-responsive d-none d-md-block">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light text-muted fw-bold x-small text-uppercase">
+                        <tr>
+                            <th class="ps-4 py-3 border-0">Utilizador</th>
+                            <th class="py-3 border-0">Cargo / Função</th>
+                            <th class="py-3 border-0">Estado</th>
+                            <th class="py-3 text-end pe-4 border-0">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody class="border-0">
+                        {% for u in usuarios %}
+                        <tr class="border-bottom">
+                            <td class="ps-4 py-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar-circle me-3 bg-primary-soft text-primary fw-bold">
+                                        {{ u.username|slice:":1"|upper }}
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold text-dark">{{ u.username }}</div>
+                                        <div class="text-muted x-small">{{ u.email|default:"Sem e-mail" }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge rounded-pill bg-light text-dark border px-3 py-2 fw-medium">
+                                    <i class="bi bi-shield-lock me-1 text-primary"></i>
+                                    {{ u.profile.get_cargo_display|default:u.profile.cargo }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if u.profile.ativo %}
+                                <span class="badge bg-success-soft text-success rounded-pill px-3">
+                                    <i class="bi bi-check-circle-fill me-1"></i> Ativo
+                                </span>
+                                {% else %}
+                                <span class="badge bg-danger-soft text-danger rounded-pill px-3">
+                                    <i class="bi bi-x-circle-fill me-1"></i> Inativo
+                                </span>
+                                {% endif %}
+                            </td>
+                            <td class="text-end pe-4">
+                                <div class="dropdown">
+                                    <button class="btn btn-light btn-sm rounded-circle shadow-sm" type="button" data-bs-toggle="dropdown">
+                                        <i class="bi bi-three-dots-vertical"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg rounded-3">
+                                        <li><a class="dropdown-item py-2" href="{% url 'editar_usuario' u.id %}"><i class="bi bi-pencil me-2 text-primary"></i> Editar Perfil</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item py-2 text-danger" href="#"><i class="bi bi-power me-2"></i> Alterar Estado</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="4" class="text-center py-4 text-muted">Nenhum membro cadastrado.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="d-md-none p-3">
+                {% for u in usuarios %}
+                <div class="bg-light rounded-4 p-3 mb-3 border shadow-xs">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="avatar-circle me-3 bg-primary-soft text-primary fw-bold">
+                            {{ u.username|slice:":1"|upper }}
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="fw-bold text-dark">{{ u.username }}</div>
+                            <div class="text-muted x-small">{{ u.email|default:"Sem e-mail" }}</div>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn btn-sm p-0" type="button" data-bs-toggle="dropdown">
+                                <i class="bi bi-three-dots-vertical fs-5"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end border-0 shadow rounded-3">
+                                <li><a class="dropdown-item" href="{% url 'editar_usuario' u.id %}">Editar</a></li>
+                                <li><a class="dropdown-item text-danger" href="#">Inativar</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                        <span class="x-small fw-bold text-uppercase text-muted">{{ u.profile.cargo }}</span>
+                        {% if u.profile.ativo %}
+                            <span class="text-success x-small fw-bold"><i class="bi bi-circle-fill me-1" style="font-size: 8px;"></i> ATIVO</span>
+                        {% else %}
+                            <span class="text-danger x-small fw-bold"><i class="bi bi-circle-fill me-1" style="font-size: 8px;"></i> INATIVO</span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    /* FUNDO COMPLETO SEM DIVISÓRIA */
+    body, #content-wrapper, .container-fluid { 
+        background-color: #f1f5f9 !important; 
+        min-height: 100vh;
+    }
+
+    /* Estilos Premium Reutilizáveis */
+    .x-small { font-size: 0.7rem; }
+    
+    .avatar-circle {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px; /* Estilo Apple/SaaS Moderno */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+    }
+
+    .bg-primary-soft { background-color: rgba(13, 110, 253, 0.1); }
+    .bg-success-soft { background-color: rgba(16, 185, 129, 0.1); }
+    .bg-danger-soft { background-color: rgba(244, 63, 94, 0.1); }
+
+    .table tbody tr:hover { background-color: #fbfcfd !important; }
+    .shadow-xs { box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+
+    /* Ajuste de tipografia do botão para não quebrar */
+    .btn { white-space: nowrap; }
+</style>
+{% endblock %}

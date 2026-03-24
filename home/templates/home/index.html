@@ -1,0 +1,250 @@
+{% extends 'home/base.html' %}
+
+{% block title %}Início | {{ config.nome_clinica|default:"Consultório" }}{% endblock %}
+
+{% block content %}
+
+<style>
+    /* DEFINIÇÃO DE CORES CLÍNICAS */
+    :root {
+        --azul-clinico-dark: #2c3e50; /* Cor da Sidebar */
+        --azul-clinico-primary: #3498db;
+        --azul-clinico-light: #e3f2fd;
+        --azul-clinico-accent: #2980b9;
+    }
+
+    .hero-section {
+        min-height: calc(100vh - 40px);
+        background: radial-gradient(circle at top right, #f0f7ff 0%, #ffffff 50%, #f8f9fa 100%);
+        border-radius: 30px;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    /* Nuvens em tons de azul */
+    .cloud-glass {
+        position: absolute;
+        background: rgba(227, 242, 253, 0.4);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(187, 222, 251, 0.6);
+        border-radius: 100px;
+        z-index: 1;
+        animation: float-premium 8s ease-in-out infinite;
+    }
+
+    .cg-1 { width: 180px; height: 70px; top: 5%; left: -30px; animation-duration: 12s; }
+    .cg-2 { width: 130px; height: 50px; top: 10%; right: 5%; animation-duration: 15s; animation-delay: 2s; }
+    .cg-3 { width: 200px; height: 80px; bottom: 5%; left: 5%; animation-duration: 18s; }
+
+    @keyframes float-premium {
+        0%, 100% { transform: translate(0, 0); }
+        50% { transform: translate(15px, -15px); }
+    }
+
+    /* Estrelas Animadas - Amarelo Ouro */
+    .magic-star {
+        position: absolute;
+        color: #FFD93D; /* <--- Cor Amarela */
+        filter: drop-shadow(0 0 8px rgba(255, 217, 61, 0.6)); /* <--- Brilho Amarelo */
+        z-index: 5;
+        animation: pulse-star 3s infinite;
+    }
+
+    @keyframes pulse-star {
+        0%, 100% { opacity: 0.3; transform: scale(0.8); }
+        50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    /* Avatar Central em Azul */
+    .main-avatar {
+        position: relative;
+        z-index: 5;
+        background: white;
+        width: 90px;
+        height: 90px;
+        border-radius: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 15px 30px rgba(44, 62, 80, 0.1);
+        margin-bottom: 15px;
+        transform: rotate(-5deg);
+        animation: hover-avatar 4s ease-in-out infinite;
+        border: 2px solid var(--azul-clinico-light);
+    }
+
+    @keyframes hover-avatar {
+        0%, 100% { transform: rotate(-5deg) translateY(0); }
+        50% { transform: rotate(5deg) translateY(-10px); }
+    }
+
+    .main-avatar i {
+        font-size: 3rem;
+        color: #FFD93D; /* Amarelo Ouro */
+        filter: drop-shadow(0 0 5px rgba(255, 217, 61, 0.4)); /* Brilho suave */
+        /* Removi o background-clip e text-fill-color para a cor sólida funcionar */
+    }
+
+    /* Texto de Boas-vindas */
+    .welcome-text {
+        position: relative;
+        z-index: 5;
+        text-align: center;
+        max-width: 700px;
+    }
+
+    .welcome-text h1 {
+        font-weight: 800;
+        color: var(--azul-clinico-dark); /* Azul da sidebar */
+        letter-spacing: -1px;
+        font-size: 2.5rem;
+        margin-bottom: 5px;
+    }
+
+    .welcome-text p {
+        font-size: 1.1rem !important;
+        margin-bottom: 15px;
+        color: #5d6d7e;
+    }
+
+    .welcome-text h1 span {
+        color: var(--azul-clinico-primary); /* Azul de destaque */
+    }
+
+    /* Cards Minimalistas */
+    .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+        width: 100%;
+        max-width: 900px;
+        margin-top: 20px;
+        position: relative;
+        z-index: 5;
+    }
+
+    .premium-card {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(52, 152, 219, 0.15);
+        padding: 20px;
+        border-radius: 20px;
+        transition: all 0.3s ease;
+    }
+
+    .premium-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--azul-clinico-primary);
+        background: white;
+    }
+
+    .premium-card h5 {
+        font-size: 1rem;
+        margin-bottom: 5px;
+        color: var(--azul-clinico-dark);
+    }
+
+    .premium-card p {
+        font-size: 0.85rem !important;
+    }
+
+    .card-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+    }
+
+    /* Botão Call to Action - Azul Sidebar */
+    .cta-button {
+        background: var(--azul-clinico-dark);
+        color: white;
+        padding: 12px 35px;
+        border-radius: 50px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: all 0.3s;
+        margin-top: 25px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 10px 20px rgba(44, 62, 80, 0.2);
+        z-index: 5;
+    }
+
+    .cta-button:hover {
+        background: var(--azul-clinico-accent);
+        color: white;
+        transform: translateY(-3px);
+        box-shadow: 0 12px 25px rgba(44, 62, 80, 0.3);
+    }
+
+    @media (max-width: 768px) {
+        .hero-section { border-radius: 0; min-height: 100vh; }
+        .feature-grid { grid-template-columns: 1fr; }
+    }
+</style>
+
+<div class="hero-section">
+    <div class="cloud-glass cg-1"></div>
+    <div class="cloud-glass cg-2"></div>
+    <div class="cloud-glass cg-3"></div>
+
+    <i class="bi bi-star-fill magic-star" style="top: 8%; left: 15%; font-size: 1rem;"></i>
+    <i class="bi bi-star-fill magic-star" style="top: 20%; right: 10%; font-size: 0.7rem;"></i>
+    <i class="bi bi-star-fill magic-star" style="bottom: 25%; left: 8%; font-size: 0.9rem;"></i>
+
+    <div class="main-avatar">
+        <i class="bi bi-stars"></i>
+    </div>
+
+    <div class="welcome-text">
+        <span class="badge rounded-pill bg-white border shadow-sm px-3 py-1 mb-2 fw-bold"
+            style="font-size: 0.75rem; color: var(--azul-clinico-primary);">
+            ✨ Painel Clínico Profissional
+        </span>
+        <h1>Olá, <span>{{ config.nome_profissional|default:"Dr(a). Profissional" }}</span>.</h1>
+        <p>Tudo pronto para cuidar dos seus pacientes hoje?</p>
+    </div>
+
+    <div class="feature-grid">
+        <div class="premium-card text-center text-md-start">
+            <div class="card-icon mx-auto mx-md-0" style="background: var(--azul-clinico-light); color: var(--azul-clinico-primary);">
+                <i class="bi bi-person-heart"></i>
+            </div>
+            <h5 class="fw-bold">Pacientes</h5>
+            <p class="text-muted mb-0">Gestão humanizada e detalhada.</p>
+        </div>
+
+        <div class="premium-card text-center text-md-start">
+            <div class="card-icon mx-auto mx-md-0" style="background: #e8f5e9; color: #2e7d32;">
+                <i class="bi bi-calendar2-check"></i>
+            </div>
+            <h5 class="fw-bold">Agenda</h5>
+            <p class="text-muted mb-0">Fluxo leve e organizado.</p>
+        </div>
+
+        <div class="premium-card text-center text-md-start">
+            <div class="card-icon mx-auto mx-md-0" style="background: #fff9c4; color: #f9a825;">
+                <i class="bi bi-file-earmark-bar-graph"></i>
+            </div>
+            <h5 class="fw-bold">Relatórios</h5>
+            <p class="text-muted mb-0">Visão clara do seu crescimento.</p>
+        </div>
+    </div>
+
+    <a href="/dashboard/" class="cta-button">
+        Começar Atendimentos <i class="bi bi-arrow-right-short fs-4"></i>
+    </a>
+</div>
+
+{% endblock %}

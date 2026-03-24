@@ -1,0 +1,262 @@
+{% extends 'home/base.html' %}
+
+{% block title %}Detalhes da Consulta #{{ consulta.id }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4 px-md-4">
+
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 px-3 gap-3">
+    <div class="mb-2 mb-md-0">
+        <nav aria-label="breadcrumb" class="d-none d-md-block">
+            <ol class="breadcrumb mb-1">
+                <li class="breadcrumb-item"><a href="/pacientes/" class="text-decoration-none text-muted x-small fw-bold text-uppercase">Pacientes</a></li>
+                <li class="breadcrumb-item"><a href="/pacientes/detalhes/{{ paciente.id }}/" class="text-decoration-none text-muted x-small fw-bold text-uppercase">{{ paciente.nome }}</a></li>
+                <li class="breadcrumb-item active x-small fw-bold text-uppercase text-primary">Detalhes do Atendimento</li>
+            </ol>
+        </nav>
+        <h3 class="fw-black text-dark mb-0 fs-4 fs-md-3">Prontuário de Atendimento</h3>
+        <p class="text-muted small mb-0"><i class="bi bi-hash text-primary"></i> Registro Geral: <strong>{{ consulta.id|default:"---" }}</strong></p>
+    </div>
+
+    <div class="d-flex flex-column flex-md-row gap-2 w-100 w-md-auto">
+        <a href="/pacientes/detalhes/{{ paciente.id }}/" 
+           class="btn btn-white border shadow-xs rounded-pill px-3 fw-bold text-muted small py-2">
+            <i class="bi bi-person me-1"></i> Prontuário
+        </a>
+        <a href="/agenda/" 
+           class="btn btn-white border shadow-xs rounded-pill px-3 fw-bold text-muted small py-2">
+            <i class="bi bi-calendar3 me-1"></i> Agenda
+        </a>
+        <a href="/consultas/editar/{{ consulta.id }}/" 
+           class="btn btn-primary shadow rounded-pill px-4 fw-bold py-2">
+            <i class="bi bi-pencil-square me-2"></i> Editar
+        </a>
+    </div>
+</div>
+
+    <div class="row g-4 px-3">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 mb-4 overflow-hidden">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-4 border-bottom pb-3">
+                        <div class="avatar-squircle me-3 text-primary fw-bold">{{ paciente.nome|first|upper }}</div>
+                        <div>
+                            <h4 class="fw-bold text-dark mb-0">{{ paciente.nome|default:"Paciente" }}</h4>
+                            <span class="text-muted small">Histórico clínico detalhado</span>
+                        </div>
+                    </div>
+
+                    <div class="row g-4 mb-4">
+                        <div class="col-sm-6">
+                            <label class="text-muted x-small fw-bold text-uppercase d-block mb-1">Data e Hora do Atendimento</label>
+                            <div class="d-flex align-items-center text-dark fw-bold">
+                                <div class="bg-light p-2 rounded-3 me-2 text-primary">
+                                    <i class="bi bi-calendar-event"></i>
+                                </div>
+                                {{ consulta.data_hora|date:"d/m/Y" }} às {{ consulta.data_hora|date:"H:i" }}
+                            </div>
+                        </div>
+
+                            <div class="row g-4 mb-4">
+                            <div class="col-sm-6 col-md-3">
+                                <label class="text-muted x-small fw-bold text-uppercase d-block mb-1">Data e Hora</label>
+                                <div class="text-dark fw-bold small">
+                                    <i class="bi bi-calendar-event text-primary me-1"></i>
+                                    {{ consulta.data_hora|date:"d/m/Y" }} - {{ consulta.data_hora|date:"H:i" }}
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6 col-md-3">
+                                <label class="text-muted x-small fw-bold text-uppercase d-block mb-1">Dentista</label>
+                                <div class="d-flex align-items-center text-dark fw-bold small">
+                                    <span class="rounded-circle me-2" 
+                                        style="--cor-dentista: {{ consulta.responsavel.cor_calendario|default:'#3788d8' }}; 
+                                                background-color: var(--cor-dentista); 
+                                                width: 10px; 
+                                                height: 10px; 
+                                                display: inline-block; 
+                                                border: 1px solid rgba(0,0,0,0.1);">
+                                    </span>
+                                    {{ consulta.dentista.nome|default:"Não atribuído" }}
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6 col-md-3">
+                                <label class="text-muted x-small fw-bold text-uppercase d-block mb-1">Responsável</label>
+                                <div class="d-flex align-items-center text-dark fw-bold small">
+                                    <span class="rounded-circle me-2" 
+                                        style="--cor-bg: {{ consulta.responsavel.cor_calendario|default:'#ccc' }}; 
+                                                background-color: var(--cor-bg); 
+                                                width: 10px; 
+                                                height: 10px; 
+                                                display: inline-block; 
+                                                border: 1px solid rgba(0,0,0,0.1);">
+                                        &nbsp;
+                                    </span>
+                                    {{ consulta.responsavel.nome|default:"Não atribuído" }}
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6 col-md-3">
+                                <label class="text-muted x-small fw-bold text-uppercase d-block mb-1">Procedimento</label>
+                                <div class="text-dark fw-bold small">
+                                    <i class="bi bi-stencil text-primary me-1"></i>
+                                    {{ consulta.procedimento.nome|default:"Geral / Outros" }}
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6 col-md-3">
+                                <label class="text-muted x-small fw-bold text-uppercase d-block mb-1">Status</label>
+                                <div class="d-flex align-items-center">
+                                    {% if consulta.status == 'Concluído' or consulta.status == 'confirmada' %}
+                                        <span class="badge-status bg-success-soft">Concluído</span>
+                                    {% else %}
+                                        <span class="badge-status bg-primary-soft">{{ consulta.status|default:"Agendada" }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label class="text-muted x-small fw-bold text-uppercase d-block mb-1">Status do Atendimento</label>
+                            <div class="d-flex align-items-center">
+                                {% if consulta.status == 'Concluído' or consulta.status == 'confirmada' %}
+                                    <span class="badge-status bg-success-soft">Concluído</span>
+                                {% else %}
+                                    <span class="badge-status bg-primary-soft">{{ consulta.status|default:"Agendada" }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <label class="text-muted x-small fw-bold text-uppercase d-block mb-2">Observações e Evolução Clínica</label>
+                        <div class="p-4 rounded-4 bg-light border-dashed min-vh-20">
+                            <p class="mb-0 text-dark lh-base">
+                                {{ consulta.observacoes|linebreaksbr|default:"Nenhuma observação registrada para este atendimento." }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-light border-0 px-4 py-3">
+                    <a href="/consultas/excluir/{{ consulta.id }}/" class="text-danger text-decoration-none x-small fw-bold" onclick="return confirm('Deseja excluir permanentemente este registro?')">
+                        <i class="bi bi-trash3 me-1"></i> EXCLUIR CONSULTA PERMANENTEMENTE
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 border-top border-5 {% if consulta.paga %}border-success{% else %}border-danger{% endif %} mb-4">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <h5 class="fw-bold mb-0 text-dark">Financeiro</h5>
+                        <div class="{% if consulta.paga %}text-success{% else %}text-danger{% endif %}">
+                            <i class="bi bi-shield-check fs-4"></i>
+                        </div>
+                    </div>
+
+                    <div class="text-center py-4 bg-light rounded-4 mb-4 border border-opacity-10">
+                        <label class="text-muted x-small fw-bold text-uppercase d-block mb-1">Valor da Consulta</label>
+                        <h2 class="fw-black text-dark mb-0">R$ {{ consulta.valor|floatformat:2 }}</h2>
+                    </div>
+
+                    <div class="list-group list-group-flush mb-4">
+                        <div class="list-group-item bg-transparent px-0 d-flex justify-content-between border-0 py-2">
+                            <span class="text-muted small">Status do Pagamento</span>
+                            {% if consulta.paga %}
+                                <span class="badge bg-success rounded-pill px-3 py-2 x-small fw-bold">PAGO</span>
+                            {% else %}
+                                <span class="badge bg-danger rounded-pill px-3 py-2 x-small fw-bold">PENDENTE</span>
+                            {% endif %}
+                        </div>
+                        <div class="list-group-item bg-transparent px-0 d-flex justify-content-between border-0 py-2">
+                            <span class="text-muted small">Forma de Pagto.</span>
+                            <span class="fw-bold text-dark small">{{ consulta.forma_pagamento|default:"Não definida" }}</span>
+                        </div>
+                        <div class="list-group-item bg-transparent px-0 d-flex justify-content-between border-0 py-2">
+                            <span class="text-muted small">Data do Pagto.</span>
+                            <span class="fw-bold text-dark small">{{ consulta.data_pagamento|date:"d/m/Y"|default:"-" }}</span>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        {% if consulta.paga %}
+                        <a href="{% url 'recibo_consulta' consulta.id %}" class="btn btn-success rounded-pill py-3 fw-bold shadow-sm transition-all">
+                            <i class="bi bi-printer-fill me-2"></i>Imprimir Recibo
+                        </a>
+                        {% else %}
+                        <a href="/consultas/editar/{{ consulta.id }}/" class="btn btn-danger rounded-pill py-3 fw-bold shadow-sm transition-all">
+                            <i class="bi bi-cash-stack me-2"></i>Registrar Pagamento
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4 bg-primary bg-opacity-10 border-start border-4 border-primary">
+                <div class="card-body p-3">
+                    <div class="d-flex">
+                        <i class="bi bi-info-circle-fill text-primary me-2 fs-5"></i>
+                        <div>
+                            <p class="small text-dark fw-medium mb-1">Integração Financeira</p>
+                            <p class="x-small text-muted mb-0">Consultas marcadas como **Pagas** geram automaticamente uma entrada no seu Fluxo de Caixa.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* FUNDO E TIPOGRAFIA */
+    body, #content-wrapper, .container-fluid { background-color: #f1f5f9 !important; min-height: 100vh; }
+    .fw-black { font-weight: 900; }
+    .x-small { font-size: 0.7rem; letter-spacing: 0.5px; }
+    .shadow-xs { box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+
+    /* ESTILO DOCUMENTO */
+    .border-dashed { 
+        border: 2px dashed #e2e8f0 !important; 
+        background-color: #f8fafc;
+    }
+    .min-vh-20 { min-height: 150px; }
+
+    /* AVATAR ESTILO SAAS */
+    .avatar-squircle {
+        width: 48px;
+        height: 48px;
+        background-color: rgba(13, 110, 253, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 14px;
+        font-size: 1.2rem;
+    }
+
+    /* BADGES STATUS */
+    .badge-status {
+        padding: 5px 12px;
+        border-radius: 50px;
+        font-size: 0.65rem;
+        font-weight: 800;
+        text-transform: uppercase;
+    }
+    .bg-success-soft { background-color: rgba(16, 185, 129, 0.15); color: #059669; }
+    .bg-primary-soft { background-color: rgba(13, 110, 253, 0.15); color: #0d6efd; }
+
+    /* BOTÕES */
+    .btn-white { background: #fff; color: #475569; }
+    .transition-all { transition: all 0.2s ease-in-out; }
+    .transition-all:hover { transform: translateY(-2px); }
+
+    /* BREADCRUMB */
+    .breadcrumb-item + .breadcrumb-item::before { content: "›"; color: #cbd5e1; font-size: 1.2rem; }
+    
+    @media (max-width: 768px) {
+        .fw-black { font-size: 1.5rem; }
+        .card-body { padding: 1.5rem !important; }
+    }
+</style>
+{% endblock %}

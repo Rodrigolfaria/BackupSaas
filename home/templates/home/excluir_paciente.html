@@ -1,0 +1,100 @@
+{% extends 'home/base.html' %}
+
+{% block title %}Excluir Paciente{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            <nav aria-label="breadcrumb" class="mb-3">
+                <ol class="breadcrumb small">
+                    <li class="breadcrumb-item"><a href="/pacientes/" class="text-decoration-none">Pacientes</a></li>
+                    <li class="breadcrumb-item active">Confirmar Exclusão</li>
+                </ol>
+            </nav>
+
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="card-header bg-danger bg-opacity-10 border-0 pt-4 text-center">
+                    <!-- <div class="bg-danger bg-opacity-20 d-inline-block p-3 rounded-circle mb-3">
+                        <i class="bi bi-exclamation-triangle-fill text-danger fs-1"></i>
+                    </div> -->
+                    <h3 class="fw-bold text-danger mb-1">Confirmar Exclusão</h3>
+                    <p class="text-muted px-4">Esta ação removerá permanentemente todos os dados associados a este
+                        paciente.</p>
+                </div>
+
+                <div class="card-body p-4 pt-2">
+                    <div class="bg-light rounded-3 p-3 mb-4 border">
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="avatar-sm me-2 bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center"
+                                style="width: 30px; height: 30px; font-size: 0.8rem;">
+                                {{ paciente.nome|first|upper }}
+                            </div>
+                            <h5 class="mb-0 fw-bold text-dark">{{ paciente.nome }}</h5>
+                        </div>
+                        <hr class="my-2 opacity-50">
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <small class="text-muted d-block">Contato</small>
+                                <span class="small fw-semibold">{{ paciente.telefone|default:"N/A" }}</span>
+                            </div>
+                            <div class="col-6 text-end">
+                                <small class="text-muted d-block">Desde</small>
+                                <span class="small fw-semibold">{{ paciente.data_cadastro|date:"d/m/Y" }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="d-grid gap-3">
+                            <button type="submit" class="btn btn-danger btn-lg rounded-3 py-3 fw-bold shadow-sm">
+                                <i class="bi bi-trash3 me-2"></i> Sim, Excluir Registro
+                            </button>
+                            <a href="/pacientes/detalhes/{{ paciente.id }}/"
+                                class="btn btn-light border btn-lg rounded-3 py-3 fw-bold text-muted">
+                                Não, Cancelar e Voltar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card-footer bg-white border-0 pb-4 text-center">
+                    <p class="text-muted x-small mb-0">
+                        <i class="bi bi-info-circle me-1"></i> Consultas e históricos financeiros também podem ser
+                        afetados.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Estilos específicos para a tela de exclusão */
+    .x-small {
+        font-size: 0.75rem;
+    }
+
+    .btn-danger {
+        transition: all 0.3s ease;
+    }
+
+    .btn-danger:hover {
+        background-color: #dc3545 !important;
+        transform: scale(1.02);
+        box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4) !important;
+    }
+
+    .btn-light:hover {
+        background-color: #f8f9fa !important;
+        color: #000 !important;
+    }
+
+    body {
+        background-color: #f8f9fa;
+    }
+</style>
+{% endblock %}

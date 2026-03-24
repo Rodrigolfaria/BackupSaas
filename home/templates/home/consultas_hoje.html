@@ -1,0 +1,132 @@
+{% extends 'home/base.html' %}
+
+{% block title %}Agenda de Hoje{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4" style="background-color: #f8f9fa; min-height: 100vh;">
+
+    <div class="d-flex justify-content-between align-items-center mb-4 px-3">
+        <div>
+            <h3 class="fw-bold text-dark mb-0">Agenda de Hoje</h3>
+            <p class="text-muted small mb-0">
+                <i class="bi bi-calendar3 me-1"></i> {{ hoje|date:"l, d \d\e F"|default:"Hoje" }}
+            </p>
+        </div>
+        <div class="d-flex gap-2">
+            <span class="badge bg-white text-primary border shadow-sm rounded-pill px-3 py-2">
+                {{ consultas|length }} Agendamento(s)
+            </span>
+        </div>
+    </div>
+
+    {% if consultas %}
+    <div class="px-3">
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="ps-4 border-0 text-muted small fw-bold text-uppercase" style="width: 15%;">
+                                Horário</th>
+                            <th class="border-0 text-muted small fw-bold text-uppercase" style="width: 35%;">Paciente
+                            </th>
+                            <th class="border-0 text-muted small fw-bold text-uppercase text-center"
+                                style="width: 20%;">Status</th>
+                            <th class="border-0 text-muted small fw-bold text-uppercase" style="width: 15%;">Valor</th>
+                            <th class="pe-4 border-0 text-muted small fw-bold text-uppercase text-end"
+                                style="width: 15%;">Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for c in consultas %}
+                        <tr class="border-bottom">
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center">
+                                    <div
+                                        class="bg-primary bg-opacity-10 text-primary fw-bold rounded-3 px-2 py-1 small">
+                                        {{ c.data_hora|date:"H:i"|default:"--:--" }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="fw-bold text-dark">{{ c.paciente.nome|default:"Paciente não informado" }}
+                                </div>
+                                <div class="text-muted x-small">ID da Consulta: #{{ c.id }}</div>
+                            </td>
+                            <td class="text-center">
+                                {% if c.status == 'Realizada' or c.status == 'Concluída' %}
+                                <span
+                                    class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2 border border-success border-opacity-25">
+                                    <i class="bi bi-check-circle me-1"></i> Concluída
+                                </span>
+                                {% elif c.status == 'Cancelada' %}
+                                <span
+                                    class="badge bg-danger bg-opacity-10 text-danger rounded-pill px-3 py-2 border border-danger border-opacity-25">
+                                    <i class="bi bi-x-circle me-1"></i> Cancelada
+                                </span>
+                                {% else %}
+                                <span
+                                    class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-2 border border-primary border-opacity-25">
+                                    <i class="bi bi-clock me-1"></i> {{ c.status|default:"Agendada" }}
+                                </span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="fw-semibold text-dark">R$ {{ c.valor|default:"0,00" }}</span>
+                            </td>
+                            <td class="pe-4 text-end">
+                                <a href="{% url 'detalhes_consulta' c.id %}"
+                                    class="btn btn-light border rounded-pill btn-sm px-3 fw-bold text-primary shadow-sm">
+                                    Ver Prontuário
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="px-3">
+        <div class="card border-0 shadow-sm rounded-4 py-5 text-center">
+            <div class="card-body">
+                <div class="bg-light d-inline-block p-4 rounded-circle mb-3">
+                    <i class="bi bi-calendar-check text-muted fs-1"></i>
+                </div>
+                <h5 class="fw-bold text-dark">Dia tranquilo por aqui!</h5>
+                <p class="text-muted">Nenhuma consulta agendada para hoje até o momento.</p>
+                <a href="/consultas/novo/" class="btn btn-primary rounded-pill px-4 fw-bold shadow">
+                    <i class="bi bi-plus-lg me-2"></i>Agendar Primeira Consulta
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    .x-small {
+        font-size: 0.75rem;
+    }
+
+    .table tbody tr {
+        transition: background-color 0.2s;
+    }
+
+    .table tbody tr:hover {
+        background-color: #fbfcfd !important;
+    }
+
+    .badge {
+        font-size: 0.75rem !important;
+        letter-spacing: 0.3px;
+    }
+
+    .btn-light:hover {
+        background-color: #fff !important;
+        border-color: #3b82f6 !important;
+        color: #2563eb !important;
+    }
+</style>
+{% endblock %}

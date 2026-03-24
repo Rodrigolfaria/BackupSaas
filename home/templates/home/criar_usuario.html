@@ -1,0 +1,137 @@
+{% extends 'home/base.html' %}
+
+{% block title %}Criar Usuário{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-7">
+
+            <div class="text-center mb-4">
+                <div class="bg-primary bg-opacity-10 d-inline-block p-3 rounded-circle mb-3">
+                    <i class="bi bi-person-plus-fill text-primary fs-2"></i>
+                </div>
+                <h3 class="fw-bold text-dark">Cadastro de Colaborador</h3>
+                <p class="text-muted">Preencha os dados abaixo para liberar o acesso ao sistema.</p>
+            </div>
+
+            <div class="card border-0 shadow-lg rounded-4">
+                <div class="card-body p-4 p-md-5">
+
+                    <form method="POST" novalidate>
+                        {% csrf_token %}
+
+                        {% if form.non_field_errors %}
+                        <div class="alert alert-danger rounded-3 small">
+                            {{ form.non_field_errors }}
+                        </div>
+                        {% endif %}
+
+                        <div class="row">
+                            {% for field in form %}
+                            <div
+                                class="{% if field.name == 'is_active' or field.name == 'descricao' %}col-12{% else %}col-md-6{% endif %} mb-4">
+                                <label class="form-label small fw-bold text-dark text-uppercase"
+                                    style="letter-spacing: 0.5px;">
+                                    {{ field.label }}
+                                </label>
+
+                                <div class="input-container">
+                                    {{ field }}
+                                </div>
+
+                                {% if field.errors %}
+                                <div class="text-danger mt-1 fw-bold" style="font-size: 0.75rem;">
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ field.errors|striptags }}
+                                </div>
+                                {% endif %}
+
+                                {% if field.help_text %}
+                                <div class="form-text text-muted italic" style="font-size: 0.7rem; line-height: 1.2;">
+                                    {{ field.help_text|safe }}
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-md-6 mb-2">
+                                <a href="/dashboard/"
+                                    class="btn btn-light border w-100 rounded-pill py-3 fw-bold text-muted">
+                                    Cancelar
+                                </a>
+                            </div>
+                            <div class="col-md-6">
+                                <button type="submit" class="btn btn-primary w-100 rounded-pill py-3 fw-bold shadow">
+                                    <i class="bi bi-check2-circle me-2"></i> Finalizar Cadastro
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+            <p class="text-center text-muted mt-4" style="font-size: 0.75rem;">
+                <i class="bi bi-shield-lock me-1"></i> Ambiente Seguro | Criptografia de Dados Ativa
+            </p>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    /* Estilização Geral de Inputs que o Django gera */
+    input:not([type="checkbox"]),
+    select,
+    textarea {
+        display: block;
+        width: 100%;
+        padding: 0.75rem 1rem;
+        font-size: 0.95rem;
+        color: #1e293b;
+        background-color: #fff;
+        border: 1px solid #dee2e6;
+        border-radius: 12px !important;
+        transition: all 0.2s ease-in-out;
+    }
+
+    input:focus,
+    select:focus {
+        border-color: #3b82f6 !important;
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1) !important;
+        outline: none;
+    }
+
+    /* Estilo específico para Checkboxes (Usuário Ativo) */
+    input[type="checkbox"] {
+        width: 1.2rem;
+        height: 1.2rem;
+        margin-top: 0.3rem;
+        cursor: pointer;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3) !important;
+    }
+
+    /* Remove os marcadores de lista dos erros do Django */
+    ul.errorlist {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+</style>
+{% endblock %}

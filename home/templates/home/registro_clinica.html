@@ -1,0 +1,130 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Grátis 30 Dias | OdontoClinics</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <style>
+        :root {
+            --slate-900: #0f172a;
+            --blue-600: #2563eb;
+            --cyan-500: #06b6d4;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at top right, rgba(6, 182, 212, 0.1), transparent),
+                        linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
+            min-height: 100vh;
+            display: flex; align-items: center; justify-content: center; padding: 40px 20px;
+        }
+
+        .register-card {
+            width: 100%; max-width: 550px; padding: 45px; background: white;
+            border-radius: 28px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255,255,255,0.7);
+        }
+
+        .badge-promo {
+            background: linear-gradient(to right, #dcfce7, #f0fdf4);
+            color: #166534; font-weight: 700; font-size: 0.75rem;
+            padding: 8px 16px; border-radius: 100px; display: inline-flex; align-items: center;
+            border: 1px solid #bbf7d0; margin-bottom: 20px;
+        }
+
+        .text-logo { font-size: 1.8rem; font-weight: 800; color: var(--slate-900); text-decoration: none; }
+        .gradient-text {
+            background: linear-gradient(to right, var(--blue-600), var(--cyan-500));
+            -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        .form-section-title {
+            font-size: 0.8rem; font-weight: 700; color: #94a3b8;
+            text-transform: uppercase; letter-spacing: 0.05em; margin: 25px 0 15px 0;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .form-section-title::after { content: ""; height: 1px; background: #f1f5f9; flex: 1; }
+
+        .form-control {
+            padding: 12px 16px; border-radius: 12px; border: 1px solid #e2e8f0;
+            background-color: #fdfeff; transition: all 0.2s;
+        }
+
+        .form-control:focus {
+            border-color: var(--blue-600); box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.08);
+            background-color: #fff;
+        }
+
+        .btn-start {
+            background: var(--slate-900); color: white; padding: 16px;
+            font-weight: 700; border-radius: 14px; border: none; width: 100%;
+            transition: all 0.3s; margin-top: 30px;
+        }
+
+        .btn-start:hover {
+            background: var(--blue-600); transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(37, 99, 235, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="register-card">
+        <div class="text-center">
+            <div class="badge-promo">
+                <i class="bi bi-gift me-2"></i> PERÍODO DE AVALIAÇÃO: 30 DIAS GRÁTIS
+            </div>
+            <br>
+            <a href="/" class="text-logo">Odonto<span class="gradient-text">Clinics</span></a>
+            <p class="text-muted mt-2">Inicie sua jornada digital hoje mesmo.</p>
+        </div>
+
+        <form method="post" action="{% url 'registro_clinica' %}">
+            {% csrf_token %}
+
+            <div class="form-section-title">Dados do Gestor</div>
+            
+            <div class="row g-3">
+                <div class="col-md-12">
+                    <input type="text" name="nome_completo" class="form-control" placeholder="Seu nome completo" required>
+                </div>
+                <div class="col-md-6">
+                    <input type="text" name="username" class="form-control" placeholder="Nome de usuário" required>
+                </div>
+                <div class="col-md-6">
+                    <input type="password" name="password" class="form-control" placeholder="Crie uma senha" required>
+                </div>
+            </div>
+
+            <div class="form-section-title">Dados da Clínica</div>
+
+            <div class="row g-3">
+                <div class="col-md-12">
+                    <input type="text" name="clinica_nome" class="form-control" placeholder="Nome da Clínica ou Consultório" required>
+                </div>
+                <div class="col-md-6">
+                    <input type="email" name="email_comercial" class="form-control" placeholder="E-mail comercial" required>
+                </div>
+                <div class="col-md-6">
+                    <input type="text" name="whatsapp" class="form-control" placeholder="WhatsApp (00) 00000-0000" required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-start">
+                Criar minha conta agora <i class="bi bi-arrow-right ms-2"></i>
+            </button>
+
+            <p class="text-center mt-4 text-muted small">
+                Ao clicar, você concorda com nossos termos de uso. <br>
+                Já tem conta? <a href="{% url 'login' %}" class="text-primary fw-bold text-decoration-none">Faça login</a>
+            </p>
+        </form>
+    </div>
+
+</body>
+</html>

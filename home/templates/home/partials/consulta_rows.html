@@ -1,0 +1,64 @@
+<!-- {% for consulta in page_obj %}
+<tr>
+    <td class="ps-4 text-nowrap">
+        <span class="fw-bold d-block">{{ consulta.data_hora|date:"d/m/Y" }}</span>
+        <small class="text-muted">
+            <i class="bi bi-clock me-1"></i>
+            {% if consulta.data_hora %}{{ consulta.data_hora|date:"H:i" }}{% else %}00:00{% endif %}
+        </small>
+    </td>
+    <td>
+        <div class="fw-bold text-dark">{{ consulta.paciente.nome }}</div>
+        <small class="text-muted">CPF: {{ consulta.paciente.cpf|default:"---" }}</small>
+    </td>
+    <td class="text-muted">{{ consulta.responsavel|default:"Próprio" }}</td>
+    <td>
+        <div class="fw-bold text-success">R$ {{ consulta.valor|floatformat:2 }}</div>
+        <small class="badge bg-light text-dark border">{{ consulta.get_forma_pagamento_display|default:"---" }}</small>
+    </td>
+    <td>
+        {# Lógica Corrigida: Verifica variações de Concluído/Finalizado #}
+        {% if consulta.status|lower == 'confirmada' or consulta.status|lower == 'concluída' or consulta.status|lower == 'finalizado' %}
+            <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 rounded-pill">
+                <i class="bi bi-check-circle-fill me-1"></i> Finalizada
+            </span>
+        {% elif consulta.status|lower == 'cancelada' %}
+            <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-2 rounded-pill">
+                <i class="bi bi-x-circle-fill me-1"></i> Cancelada
+            </span>
+        {% else %}
+            <span class="badge bg-warning-subtle text-warning border border-warning-subtle px-3 py-2 rounded-pill">
+                <i class="bi bi-clock-history me-1"></i> Pendente
+            </span>
+        {% endif %}
+    </td>
+    <td class="text-end pe-4">
+        <div class="btn-group shadow-sm border rounded">
+            <a href="{% url 'detalhes_consulta' consulta.id %}" class="btn btn-white btn-sm" title="Ver detalhes">
+                <i class="bi bi-eye text-secondary"></i>
+            </a>
+            <a href="{% url 'editar_consulta' consulta.id %}" class="btn btn-white btn-sm" title="Editar">
+                <i class="bi bi-pencil text-primary"></i>
+            </a>
+        </div>
+    </td>
+</tr>
+{% if consulta.observacoes %}
+<tr class="bg-light-subtle">
+    <td colspan="6" class="ps-4 py-2 small text-muted border-bottom">
+        <span class="badge bg-white text-muted border fw-normal me-1 text-uppercase"
+            style="font-size: 0.65rem;">Observação</span>
+        {{ consulta.observacoes }}
+    </td>
+</tr>
+{% endif %}
+{% empty %}
+{% if page_obj.number == 1 %}
+<tr>
+    <td colspan="6" class="text-center py-5 text-muted">
+        <i class="bi bi-calendar-x d-block fs-1 mb-2 opacity-25"></i>
+        Nenhuma consulta registrada.
+    </td>
+</tr>
+{% endif %}
+{% endfor %} -->

@@ -1,0 +1,131 @@
+{% extends 'home/base.html' %}
+
+{% block title %}Excluir Lançamento{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-5">
+
+            <nav aria-label="breadcrumb" class="mb-3">
+                <ol class="breadcrumb small">
+                    <li class="breadcrumb-item"><a href="/financeiro/" class="text-decoration-none">Financeiro</a></li>
+                    <li class="breadcrumb-item active">Confirmar Exclusão</li>
+                </ol>
+            </nav>
+
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="card-header bg-danger bg-opacity-10 border-0 pt-5 pb-4 text-center">
+                    <!-- <div class="bg-danger bg-opacity-20 d-inline-block p-3 rounded-circle mb-3">
+                        <i class="bi bi-cash-stack text-danger fs-1"></i>
+                    </div> -->
+                    <h3 class="fw-bold text-danger mb-1">Excluir Registro?</h3>
+                    <p class="text-muted px-4 small">Esta operação removerá permanentemente o lançamento do seu fluxo de
+                        caixa e relatórios.</p>
+                </div>
+
+                <div class="card-body p-4 pt-2">
+                    <div class="bg-light rounded-4 p-4 mb-4 border border-dashed">
+                        <table class="table table-borderless align-middle mb-0">
+                            <tbody>
+                                <tr>
+                                    <td class="ps-0 text-muted small fw-bold text-uppercase" style="width: 40%;">Tipo:
+                                    </td>
+                                    <td class="pe-0 text-end">
+                                        {% if registro.tipo == 'Receita' %}
+                                        <span
+                                            class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-3">Receita</span>
+                                        {% else %}
+                                        <span
+                                            class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 rounded-pill px-3">{{
+                                            registro.tipo|default:"Despesa" }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-0 text-muted small fw-bold text-uppercase pt-3">Valor:</td>
+                                    <td class="pe-0 text-end fw-bold text-dark fs-5 pt-3">
+                                        R$ {{ registro.valor|default:"0,00" }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-0 text-muted small fw-bold text-uppercase">Data:</td>
+                                    <td class="pe-0 text-end fw-bold text-dark">
+                                        {{ registro.data|date:"d/m/Y"|default:"---" }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-0 text-muted small fw-bold text-uppercase">Descrição:</td>
+                                    <td class="pe-0 text-end text-muted small">
+                                        {{ registro.descricao|default:"Sem descrição" }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="d-grid gap-3">
+                            <button type="submit" class="btn btn-danger btn-lg rounded-pill py-3 fw-bold shadow-sm">
+                                <i class="bi bi-trash3 me-2"></i> Confirmar Exclusão
+                            </button>
+                            <a href="/financeiro/"
+                                class="btn btn-light border btn-lg rounded-pill py-3 fw-bold text-muted">
+                                Cancelar e Manter
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card-footer bg-white border-0 pb-4 text-center">
+                    <p class="text-muted x-small mb-0">
+                        <i class="bi bi-shield-lock me-1"></i> Ação registrada para auditoria do sistema.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .border-dashed {
+        border-style: dashed !important;
+        border-width: 2px !important;
+        border-color: #dee2e6 !important;
+    }
+
+    .x-small {
+        font-size: 0.75rem;
+    }
+
+    .btn-danger {
+        transition: all 0.3s ease;
+    }
+
+    .btn-danger:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(220, 53, 69, 0.3) !important;
+    }
+
+    .btn-light:hover {
+        background-color: #f1f5f9 !important;
+        color: #000 !important;
+    }
+
+    .table td {
+        padding: 8px 0;
+    }
+
+    .badge {
+        font-size: 0.7rem !important;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
+</style>
+{% endblock %}

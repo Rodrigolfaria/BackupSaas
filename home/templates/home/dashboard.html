@@ -1,0 +1,286 @@
+{% extends 'home/base.html' %}
+
+{% block title %}Dashboard Executivo{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4" style="background-color: #f8f9fa; min-height: 100vh;">
+
+    <div class="d-flex justify-content-between align-items-center mb-4 px-3">
+        <div>
+            <h3 class="fw-bold text-dark mb-0">
+                Olá, {{ config.nome_profissional|default:user.first_name|default:"Doutor(a)" }}
+            </h3>
+            <p class="text-muted small">Resumo operacional da clínica para hoje.</p>
+        </div>
+        <div class="text-end">
+            <span class="badge bg-white text-dark shadow-sm rounded-pill px-3 py-2 border">
+                <i class="bi bi-calendar3 me-2 text-primary"></i>{{ hoje|date:"d \d\e F, Y" }}
+            </span>
+        </div>
+    </div>
+    
+    <div class="row g-3 mb-4 px-3">
+
+        <div class="row g-3 mb-4 px-3">
+
+            <div class="col-md-4">
+                <div
+                    class="card border-0 shadow-sm rounded-4 h-100 bg-white border-start border-5 border-primary position-relative overflow-hidden">
+                    <div class="position-absolute top-0 end-0 p-3">
+                        <span
+                            class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-10 rounded-pill px-3 py-2"
+                            style="font-size: 0.65rem;">
+                            AGENDA
+                        </span>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="mb-4">
+                            <div
+                                class="bg-primary bg-opacity-10 p-3 rounded-3 d-inline-flex align-items-center justify-content-center">
+                                <i class="bi bi-calendar-check text-primary fs-3"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h6 class="text-muted small fw-bold text-uppercase mb-1" style="letter-spacing: 0.5px;">
+                                Consultas Hoje</h6>
+                            <h2 class="fw-bold mb-0 text-dark">{{ consultas_hoje|default:"0" }}</h2>
+                            <p class="text-muted x-small mb-0 mt-2"><i class="bi bi-clock me-1"></i> Total agendado</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div
+                    class="card border-0 shadow-sm rounded-4 h-100 bg-white border-start border-5 border-info position-relative overflow-hidden">
+                    <div class="position-absolute top-0 end-0 p-3">
+                        <span
+                            class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-10 rounded-pill px-3 py-2"
+                            style="font-size: 0.65rem;">
+                            NOVOS
+                        </span>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="mb-4">
+                            <div
+                                class="bg-info bg-opacity-10 p-3 rounded-3 d-inline-flex align-items-center justify-content-center">
+                                <i class="bi bi-people text-info fs-3"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h6 class="text-muted small fw-bold text-uppercase mb-1" style="letter-spacing: 0.5px;">
+                                Pacientes Hoje</h6>
+                            <h2 class="fw-bold mb-0 text-dark">{{ pacientes_hoje|default:"0" }}</h2>
+                            <p class="text-muted x-small mb-0 mt-2"><i class="bi bi-person-plus me-1"></i> Cadastros
+                                realizados</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div
+                    class="card border-0 shadow-sm rounded-4 h-100 bg-white border-start border-5 border-success position-relative overflow-hidden">
+                    <div class="position-absolute top-0 end-0 p-3">
+                        <span
+                            class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-10 rounded-pill px-3 py-2"
+                            style="font-size: 0.65rem;">
+                            DINHEIRO
+                        </span>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="mb-4">
+                            <div
+                                class="bg-success bg-opacity-10 p-3 rounded-3 d-inline-flex align-items-center justify-content-center">
+                                <i class="bi bi-currency-dollar text-success fs-3"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h6 class="text-muted small fw-bold text-uppercase mb-1" style="letter-spacing: 0.5px;">
+                                Receita Prevista</h6>
+                            <h2 class="fw-bold mb-0 text-dark">R$ {{ faturamento_diario|default:"0,00" }}</h2>
+                            <p class="text-muted x-small mb-0 mt-2"><i class="bi bi-graph-up-arrow me-1"></i> Fluxo de
+                                caixa de hoje</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row g-3 mb-4 px-3">
+        <div class="col-6 col-md-3">
+            <a href="/agendar/" class="text-decoration-none">
+                <div class="card border-0 shadow-sm rounded-4 text-center p-3 hover-action">
+                    <i class="bi bi-plus-circle text-primary fs-4 mb-2"></i>
+                    <h6 class="small fw-bold text-dark mb-0">Novo Agendamento</h6>
+                </div>
+            </a>
+        </div>
+        <div class="col-6 col-md-3">
+            <a href="/financeiro/" class="text-decoration-none">
+                <div class="card border-0 shadow-sm rounded-4 text-center p-3 hover-action">
+                    <i class="bi bi-cash-stack text-success fs-4 mb-2"></i>
+                    <h6 class="small fw-bold text-dark mb-0">Financeiro</h6>
+                </div>
+            </a>
+        </div>
+        <div class="col-6 col-md-3">
+            <a href="/relatorios/" class="text-decoration-none">
+                <div class="card border-0 shadow-sm rounded-4 text-center p-3 hover-action">
+                    <i class="bi bi-bar-chart-line text-info fs-4 mb-2"></i>
+                    <h6 class="small fw-bold text-dark mb-0">Relatórios</h6>
+                </div>
+            </a>
+        </div>
+        <div class="col-6 col-md-3">
+            <a href="/pacientes/" class="text-decoration-none">
+                <div class="card border-0 shadow-sm rounded-4 text-center p-3 hover-action">
+                    <i class="bi bi-search text-secondary fs-4 mb-2"></i>
+                    <h6 class="small fw-bold text-dark mb-0">Pacientes</h6>
+                </div>
+            </a>
+        </div>
+    </div>
+
+
+    <div class="row g-4 px-3">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
+                <div class="card-header bg-white p-4 border-0 d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold text-dark mb-0">Próximos Atendimentos</h5>
+                    <a href="{% url 'consultas_hoje' %}"
+                        class="btn btn-sm btn-light border rounded-pill px-3 fw-bold">Agenda Completa</a>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="ps-4 border-0 text-muted small fw-bold">HORÁRIO</th>
+                                <th class="border-0 text-muted small fw-bold">PACIENTE</th>
+                                <th class="border-0 text-muted small fw-bold">STATUS</th>
+                                <th class="border-0 text-muted small fw-bold text-end pe-4">AÇÃO</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for consulta in proximas_consultas %}
+                            <tr>
+                                <td class="ps-4">
+                                    <span class="badge bg-light text-dark fw-bold border p-2">
+                                        {{ consulta.data_hora|date:"H:i"|default:"--:--" }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="fw-bold text-dark">{{ consulta.paciente.nome|default:"Paciente" }}</div>
+                                    <div class="text-muted x-small">Ref: #{{ consulta.id }}</div>
+                                </td>
+                                <td>
+                                    {% if consulta.status == 'agendada' %}
+                                    <span
+                                        class="badge bg-info bg-opacity-10 text-info rounded-pill px-3 py-2 border border-info border-opacity-10">Agendada</span>
+                                    {% elif consulta.status == 'confirmada' %}
+                                    <span
+                                        class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2 border border-success border-opacity-10">Confirmada</span>
+                                    {% else %}
+                                    <span class="badge bg-light text-muted rounded-pill px-3 py-2">{{
+                                        consulta.status|title }}</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end pe-4">
+                                    <a href="{% url 'detalhes_consulta' consulta.id %}"
+                                        class="btn btn-sm btn-primary rounded-pill px-3 fw-bold shadow-sm">
+                                        Abrir
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center py-5 text-muted">Agenda livre para o restante do dia.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 bg-warning bg-opacity-10 mb-4">
+                <div class="card-body p-4 text-center">
+                    <div class="mb-2">
+                        <i class="bi bi-cash-coin text-warning fs-1"></i>
+                    </div>
+                    <h6 class="fw-bold text-dark mb-1">Pendências de Cobrança</h6>
+                    <p class="small text-dark opacity-75 mb-3">Há consultas finalizadas sem lançamento financeiro.</p>
+                    <a href="{% url 'consultas_em_aberto' %}"
+                        class="btn btn-warning btn-sm w-100 rounded-pill fw-bold shadow-sm">
+                        Resolver Agora
+                    </a>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4 h-auto">
+                <div class="card-body p-4">
+                    <h6 class="fw-bold text-dark mb-3"><i class="bi bi-life-preserver me-2"></i>Atalhos de Suporte</h6>
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'manual_operacao' %}"
+                            class="btn btn-light btn-sm text-start rounded-3 border py-2 shadow-sm-hover">
+                            <i class="bi bi-journal-text me-2 text-primary"></i> Manual de Operação
+                        </a>
+
+                        <a href="https://wa.me/5524993267575?text=Olá! Preciso de suporte com o sistema Gestão Premium."
+                            target="_blank"
+                            class="btn btn-light btn-sm text-start rounded-3 border py-2 shadow-sm-hover">
+                            <i class="bi bi-whatsapp me-2 text-success"></i> Suporte Especializado
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <style>
+                /* Pequeno ajuste visual para os botões de atalho */
+                .shadow-sm-hover {
+                    transition: all 0.2s ease;
+                }
+
+                .shadow-sm-hover:hover {
+                    background-color: #ffffff !important;
+                    border-color: #dee2e6 !important;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+                    transform: translateX(3px);
+                }
+            </style>
+        </div>
+    </div>
+</div>
+
+<style>
+    .hover-action {
+        transition: all 0.2s ease;
+        border: 1px solid transparent !important;
+    }
+
+    .hover-action:hover {
+        transform: translateY(-4px);
+        background-color: #ffffff !important;
+        border-color: #dee2e6 !important;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05) !important;
+    }
+
+    .x-small {
+        font-size: 0.7rem;
+    }
+
+    .badge {
+        font-size: 0.72rem !important;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(59, 130, 246, 0.02) !important;
+    }
+</style>
+{% endblock %}

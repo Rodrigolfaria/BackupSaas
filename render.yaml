@@ -1,0 +1,34 @@
+services:
+  - type: web
+    name: mysite
+    env: python
+    plan: starter
+
+    buildCommand: >
+      pip install -r requirements.txt &&
+      python manage.py collectstatic --noinput
+
+    startCommand: >
+      python manage.py migrate &&
+      gunicorn mysite.wsgi:application
+      --workers 1
+      --bind 0.0.0.0:$PORT
+      --log-file -
+
+    disk:
+      name: mysite-media
+      mountPath: /data/media
+      sizeGB: 1
+
+    envVars:
+      - key: SECRET_KEY
+        sync: false
+
+      - key: DEBUG
+        value: "False"
+
+      - key: DATABASE_URL
+        sync: false   # 👈 mantém no painel
+
+      - key: PYTHON_VERSION
+        value: "3.11.7"

@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Recibo - {{ consulta.paciente.nome }}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <style>
+        /* Configura a folha física para não ter margens extras do navegador */
+        @page {
+            size: A4;
+            margin: 1;
+        }
+
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            color: #2d3436;
+            line-height: 1.5;
+            margin: 0;
+            padding: 0;
+            font-size: 12px;
+            background-color: #f0f2f5;
+        }
+
+        /* BARRA DE FERRAMENTAS */
+        .no-print-toolbar {
+            background: #ffffff;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            border-bottom: 1px solid #ddd;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-action {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .btn-print {
+            background: #25AAE2;
+            color: white;
+        }
+
+        .btn-back {
+            background: #95a5a6;
+            color: white;
+        }
+
+        /* FOLHA DE PAPEL A4 */
+        .paper {
+            background: white;
+            width: 21cm;
+            /* Mudamos de min-height para height fixo na tela, mas auto na impressão */
+            min-height: 29.7cm;
+            margin: 20px auto;
+            padding: 1.2cm;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            position: relative;
+            box-sizing: border-box;
+            border: 2px solid #2d3436;
+            outline: 1px solid #2d3436;
+            outline-offset: -6px;
+        }
+
+        .text-primary {
+            color: #25AAE2;
+        }
+
+        .header {
+            width: 100%;
+            margin-bottom: 25px;
+            border-bottom: 3px solid #25AAE2;
+            padding-bottom: 15px;
+        }
+
+        .header table {
+            width: 100%;
+        }
+
+        .clinic-name {
+            font-size: 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .clinic-contact {
+            color: #636e72;
+            font-size: 11px;
+        }
+
+        .document-title {
+            text-align: center;
+            background-color: #f1f2f6;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .document-title h2 {
+            margin: 0;
+            font-size: 16px;
+            letter-spacing: 2px;
+        }
+
+        .info-box {
+            padding: 10px;
+            border: 1px solid #dfe6e9;
+            border-radius: 8px;
+        }
+
+        .label {
+            font-size: 9px;
+            text-transform: uppercase;
+            font-weight: bold;
+            color: #25AAE2;
+            margin-bottom: 2px;
+        }
+
+        .value {
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .financial-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .financial-table th {
+            background-color: #2d3436;
+            color: white;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .financial-table td {
+            padding: 10px 8px;
+            border-bottom: 1px solid #dfe6e9;
+        }
+
+        .total-row {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+
+        .notes-section {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #fff9e6;
+            border-left: 4px solid #f1c40f;
+            font-style: italic;
+        }
+
+        .signature-container {
+            margin-top: 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .signature-wrapper {
+            display: inline-block;
+            width: 280px;
+            border-top: 1px solid #2d3436;
+            padding-top: 8px;
+            position: relative;
+        }
+
+        .digital-signature-img {
+            position: absolute;
+            bottom: 35px;
+            left: 50%;
+            transform: translateX(-50%);
+            max-height: 70px;
+            pointer-events: none;
+        }
+
+        .footer {
+            /* No PDF, vamos deixar o rodapé fluir naturalmente em vez de absolute */
+            margin-top: 50px;
+            text-align: center;
+            font-size: 10px;
+            color: #b2bec3;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+        }
+
+        /* REGRAS CRÍTICAS PARA IMPRESSÃO */
+        @media print {
+            .no-print-toolbar {
+                display: none !important;
+            }
+
+            body {
+                background: white !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            .paper {
+                margin: 0 !important;
+                border: 2px solid #000 !important;
+                box-shadow: none !important;
+                width: 21cm !important;
+                height: 29cm !important;
+                /* Ligeiramente menor que 29.7 para evitar quebra */
+                min-height: auto !important;
+                overflow: hidden;
+                /* Evita que qualquer elemento "vaze" */
+            }
+
+            /* Garante que as cores de fundo apareçam no PDF */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="no-print-toolbar">
+        <a href="/dashboard/" class="btn-action btn-back">
+            <i class="bi bi-arrow-left"></i> Voltar
+        </a>
+        <button onclick="window.print()" class="btn-action btn-print">
+            <i class="bi bi-printer"></i> Imprimir / PDF
+        </button>
+        <button onclick="enviarPorEmail()" class="btn-action btn-email">
+            <i class="bi bi-envelope"></i> Enviar por E-mail
+        </button>
+    </div>
+
+    <div class="paper">
+        <div class="header">
+            <table>
+                <tr>
+                    <td width="15%">
+                        {% if config.logo %}
+                        <img src="{{ config.logo.url }}" style="max-height: 65px;">
+                        {% endif %}
+                    </td>
+                    <td width="85%" style="text-align: right;">
+                        <div class="clinic-name text-primary">{{ config.nome_clinica|default:clinic.nome }}</div>
+                        <div class="clinic-contact">
+                            {{ config.endereco|default:"Endereço não cadastrado" }}<br>
+                            Tel: {{ config.telefone|default:"---" }} |
+                            Email: {{ config.email|default:user.email }}
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="document-title">
+            <h2>RECIBO DE PAGAMENTO</h2>
+            <div class="receipt-number">
+                Nº CONTROLE: {{ consulta.id|stringformat:"05d" }} |
+                DATA/HORA: {{ consulta.data_hora|date:"d/m/Y H:i" }}
+            </div>
+        </div>
+
+        <table width="100%" cellpadding="0" cellspacing="10">
+            <tr>
+                <td width="60%" class="info-box">
+                    <span class="label">Paciente / Beneficiário</span>
+                    <div class="value">{{ consulta.paciente.nome|upper }}</div>
+                </td>
+                <td width="40%" class="info-box">
+                    <span class="label">CPF/Documento</span>
+                    <div class="value">{{ consulta.paciente.cpf|default:"---.---.------" }}</div>
+                </td>
+            </tr>
+        </table>
+
+        <table class="financial-table">
+            <thead>
+                <tr>
+                    <th>Descrição do Procedimento / Consulta</th>
+                    <th width="25%">Data/Hora</th>
+                    <th width="20%" style="text-align: right;">Valor</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Consulta Odontológica - {{ consulta.get_status_display|default:consulta.status }}</td>
+                    <td>{{ consulta.data_hora|date:"d/m/Y H:i" }}</td>
+                    <td style="text-align: right;">R$ {{ consulta.valor }}</td>
+                </tr>
+                <tr class="total-row">
+                    <td colspan="2" style="text-align: right; text-transform: uppercase; font-size: 11px;">Total Pago
+                    </td>
+                    <td style="text-align: right;" class="text-primary">R$ {{ consulta.valor }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div style="margin-top: 10px;">
+            <span class="label">Forma de Pagamento:</span>
+            <span class="value">{{ consulta.forma_pagamento|default:"Não informada" }}</span>
+        </div>
+
+        {% if consulta.observacoes %}
+        <div class="notes-section">
+            <span class="label" style="color: #d35400;">Observações:</span>
+            {{ consulta.observacoes }}
+        </div>
+        {% endif %}
+
+        <div class="signature-container">
+            <div class="signature-wrapper">
+                {% if config.assinatura_digital %}
+                <img src="{{ config.assinatura_digital.url }}" class="digital-signature-img">
+                {% endif %}
+
+                <strong>{{ config.nome_profissional|default:user.get_full_name }}</strong><br>
+                <span style="font-size: 10px; color: #636e72;">
+                    {{ config.cro|default:"Responsável Técnico" }}
+                    {% if config.documento_fiscal %} | {{ config.documento_fiscal }}{% endif %}
+                </span>
+            </div>
+        </div>
+
+        <div class="footer">
+            Este documento comprova o pagamento dos serviços acima descritos conforme legislação vigente.<br>
+            Gerado em {{ "now"|date:"d/m/Y H:i" }} por {{ user.username }}
+        </div>
+    </div>
+
+    <script>
+        function enviarPorEmail() {
+            alert('Integrando com seu servidor de e-mail...');
+        }
+    </script>
+</body>
+
+</html>

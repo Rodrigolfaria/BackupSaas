@@ -1,0 +1,496 @@
+{% extends "home/base.html" %}
+{% load static %}
+
+{% block title %}Agenda Clínica{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-3 py-md-4" style="background-color: #f8f9fa; min-height: 100vh;">
+
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 px-2 px-md-3 gap-3">
+        <div>
+            <h3 class="fw-bold text-dark mb-0 fs-4 fs-md-3">Agenda de Atendimentos</h3>
+            <p class="text-muted small mb-0">Gerencie seus compromissos com clareza</p>
+        </div>
+
+        <div class="flex-grow-1 mx-md-4" style="max-width: 300px;">
+            <div class="input-group input-group-sm shadow-sm">
+                <span class="input-group-text bg-white border-end-0 text-muted">
+                    <i class="bi bi-filter-circle"></i>
+                </span>
+                <select id="filtro-dentista" class="form-select border-start-0 fw-bold text-dark">
+                    <option value="todos">Todos os Profissionais</option>
+                    {% for dentista in dentistas_da_clinica %}
+                        <option value="{{ dentista.id }}">Dr(a). {{ dentista.nome }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="d-flex gap-2">
+            <a href="{% url 'google_auth' %}"
+                class="btn btn-white border shadow-sm rounded-pill px-3 text-dark fw-bold btn-sm btn-md-base">
+                <i class="bi bi-google me-2 text-danger"></i> Google
+            </a>
+            <a href="{% url 'agendar' %}" class="btn btn-primary shadow rounded-pill px-3 px-md-4 fw-bold btn-sm btn-md-base">
+                <i class="bi bi-calendar-plus me-2"></i> Nova Consulta
+            </a>
+        </div>
+    </div>
+
+    <div class="row mx-0">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="card-body p-2 p-md-4">
+                    <div id="calendar"></div>
+                </div>
+
+                <div class="card-footer bg-white border-top-0 py-3 px-3">
+                    <div class="d-flex flex-wrap justify-content-start justify-content-md-center gap-3 gap-md-4">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="legend-dot" style="background: #fef9c3; border-color: #ca8a04;"></span>
+                            <span class="small fw-bold text-muted">Agendada</span>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="legend-dot" style="background: #dcfce7; border-color: #15803d;"></span>
+                            <span class="small fw-bold text-muted">Confirmada</span>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="legend-dot" style="background: #ecfdf5; border-color: #059669;"></span>
+                            <span class="small fw-bold text-muted">Finalizada</span>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="legend-dot" style="background: #ffedd5; border-color: #c2410c;"></span>
+                            <span class="small fw-bold text-muted">Reagendar</span>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="legend-dot" style="background: #fee2e2; border-color: #b91c1c;"></span>
+                            <span class="small fw-bold text-muted">Cancelada</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalReagendar" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered mx-3 mx-md-auto">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="fw-bold text-dark"><i class="bi bi-clock-history me-2 text-primary"></i> Ajustar Horário</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body py-4">
+                <p class="text-muted small mb-4">Você moveu a consulta de <strong id="nomePacienteModal"></strong> para
+                    o dia <strong id="dataConsultaModal"></strong>. Confirme o horário exato:</p>
+
+                <div class="form-group">
+                    <label class="form-label small fw-bold text-muted">Horário da Consulta</label>
+                    <input type="time" id="inputHoraModal"
+                        class="form-control form-control-lg rounded-3 border-light-subtle shadow-sm" step="300">
+                </div>
+            </div>
+            <div class="modal-footer border-0 pt-0 d-flex flex-column flex-md-row">
+                <button type="button" class="btn btn-light rounded-pill px-4 w-100 w-md-auto mb-2 mb-md-0"
+                    id="btnCancelarReagendar">Cancelar</button>
+                <button type="button" class="btn btn-primary rounded-pill px-4 fw-bold w-100 w-md-auto"
+                    id="btnConfirmarReagendar">Confirmar Reagendamento</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.8/locales/pt-br.global.min.js"></script>
+
+<style>
+    /* 1. BOTÕES DE NAVEGAÇÃO */
+    .fc .fc-button {
+        background-color: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        color: #475569 !important;
+        font-weight: 600 !important;
+        font-size: 0.8rem !important;
+        padding: 5px 10px !important;
+        border-radius: 8px !important;
+        box-shadow: none !important;
+    }
+
+    .fc .fc-button-primary:not(:disabled).fc-button-active {
+        background-color: #0d6efd !important;
+        border-color: #0d6efd !important;
+        color: #ffffff !important;
+    }
+
+    /* 2. ESTILO DAS CONSULTAS */
+    .fc-event {
+        background-color: transparent !important;
+        border: none !important;
+        margin: 1px 1px !important;
+        padding: 0 !important;
+        border-radius: 4px !important;
+        transition: transform 0.2s ease !important;
+        max-width: 100%;
+    }
+
+    .custom-event-card {
+        display: flex;
+        align-items: center;
+        padding: 2px 6px;
+        min-height: 24px;
+        border-radius: 6px;
+        border-left: 4px solid currentColor;
+        width: 80%; /* Garante que ocupa o espaço disponível */
+        box-sizing: border-box; /* Crucial para não somar padding na largura */}
+
+    .status-dot-vazada {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        margin-right: 4px;
+        flex-shrink: 0;
+        background-color: transparent !important;
+        border-width: 1.5px;
+        border-style: solid;
+    }
+
+    .event-text {
+        font-weight: 600;
+        font-size: 0.70rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        flex: 1; 
+        min-width: 0; /* Força o flex-item a aceitar o truncamento (o "...") */
+        margin-left: 4px;
+    }
+
+    /* Ajuste específico para a visão de Lista do FullCalendar */
+    .fc-list-event-title {
+        padding: 4px !important;
+    }
+
+    .fc-list-event {
+        cursor: pointer;
+    }
+
+    /* 3. AJUSTES DO GRID E RESPONSIVIDADE */
+    .fc .fc-toolbar {
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center !important;
+    }
+
+    /* 3. AJUSTE DEFINITIVO DOS TÍTULOS DOS DIAS (LISTA) */
+    .fc .fc-list-day-cushion {
+        background-color: #f8fafc !important;
+        padding: 10px 12px !important;
+        display: flex !important;
+        flex-direction: row; /* Mantém na mesma linha */
+        justify-content: space-between; /* Empurra o nome para esquerda e data para direita */
+        align-items: center;
+        gap: 5px;
+    }
+
+
+
+    /* Ajuste para os títulos de seções (Domingo, Segunda...) na lista */
+    .fc .fc-list-day-cushion {
+        background-color: #f1f5f9 !important; /* Um cinza leve para separar os dias */
+        padding: 8px 12px !important;
+    }
+
+    .fc-list-day-text, 
+    .fc-list-day-side-text {
+        font-size: 0.75rem !important; /* Diminuído para caber melhor no mobile */
+        font-weight: 700 !important;
+        text-transform: uppercase;
+        color: #334155 !important;
+        text-decoration: none !important;
+        white-space: nowrap; /* Impede que o texto quebre e suma */
+    }
+
+    .fc .fc-toolbar-title {
+        font-weight: 800 !important;
+        color: #1e293b;
+        font-size: 1rem !important;
+        width: 100%;
+        text-align: center;
+        margin: 5px 0 !important;
+    }
+
+    .fc th {
+        border: none !important;
+        padding: 5px 0 !important;
+        text-transform: uppercase;
+        font-size: 0.6rem;
+        color: #94a3b8;
+    }
+
+    .legend-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        border: 2px solid;
+        display: inline-block;
+        flex-shrink: 0;
+    }
+
+    @media (max-width: 480px) {
+        .fc-list-day-side-text {
+            font-size: 0.7rem !important;
+            opacity: 0.8;
+        }
+        .fc-list-day-text {
+            font-size: 0.7rem !important;
+        }
+    }
+
+    /* Remove uma borda interna que o FullCalendar coloca e que rouba espaço */
+    .fc-list-table {
+        border-style: hidden !important;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+        var modalReagendarEl = document.getElementById('modalReagendar');
+        var modalReagendar = new bootstrap.Modal(modalReagendarEl);
+        
+        // --- NOVO: Captura o Select de Filtro ---
+        var selectDentista = document.getElementById('filtro-dentista');
+        
+        let infoReagendamento = null;
+
+        // Função para determinar a visão inicial baseada na largura da tela
+        function getInitialView() {
+            return window.innerWidth < 768 ? 'listWeek' : 'dayGridMonth';
+        }
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: getInitialView(),
+            locale: 'pt-br',
+            timeZone: 'local',
+            height: 'auto',
+            selectable: true,
+            editable: true,
+            eventStartEditable: true,
+            eventDurationEditable: false,
+            
+            // URL Base de Eventos
+            events: "/agenda/events/",
+
+            buttonText: {
+                today: 'Hoje',
+                month: 'Mês',
+                week: 'Semana',
+                day: 'Dia',
+                list: 'Lista'
+            },
+
+            headerToolbar: {
+                left: window.innerWidth < 768 ? 'prev,next' : 'prev,next today',
+                center: 'title',
+                right: window.innerWidth < 768 ? 'listWeek,dayGridMonth' : 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+
+            datesSet: function(info) {
+                if (info.view.type === 'listWeek') {
+                    preencherDiasVazios(info.start, info.end);
+                }
+            },
+
+            windowResize: function(arg) {
+                if (window.innerWidth < 768) {
+                    calendar.changeView('listWeek');
+                } else {
+                    calendar.changeView('dayGridMonth');
+                }
+            },
+
+            // --- FLUXO DE REAGENDAMENTO (DRAG & DROP) ---
+            eventDrop: function (info) {
+                infoReagendamento = info;
+                const dataBase = info.event.start;
+                
+                document.getElementById('nomePacienteModal').innerText = info.event.title;
+                document.getElementById('dataConsultaModal').innerText = dataBase.toLocaleDateString('pt-BR');
+                document.getElementById('inputHoraModal').value = dataBase.toLocaleTimeString('pt-BR', { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+
+                modalReagendar.show();
+            },
+
+            // --- RENDERIZAÇÃO CUSTOMIZADA DO CARD ---
+            eventContent: function (arg) {
+                let statusColor = arg.event.borderColor || '#0d6efd';
+                let bgColor = arg.event.backgroundColor || '#f8f9fa';
+                let textColor = arg.event.textColor || '#333';
+                let timeText = arg.timeText || '';
+
+                let container = document.createElement('div');
+                container.className = 'custom-event-card';
+                container.style.backgroundColor = bgColor;
+                container.style.color = statusColor;
+
+                container.innerHTML = `
+                    <div class="status-dot-vazada" style="border-color: ${statusColor};"></div>
+                    <div class="event-text" style="color: ${textColor}">
+                        ${timeText ? `<strong class="me-1">${timeText}</strong>` : ''} 
+                        ${arg.event.title}
+                    </div>
+                `;
+                return { domNodes: [container] };
+            },
+
+            eventDidMount: function (info) {
+                let status = info.event.extendedProps.status || "Consulta";
+                info.el.setAttribute('title', `Paciente: ${info.event.title}\nStatus: ${status}`);
+            },
+
+            eventClick: function (info) {
+                if (info.event.url) {
+                    info.jsEvent.preventDefault();
+                    window.location.href = info.event.url;
+                }
+            },
+
+            dateClick: function (info) {
+                window.location.href = "/agendar/?data=" + info.dateStr;
+            }
+        });
+
+        calendar.render();
+
+        // --- LÓGICA DO DESAFIO: FILTRO DE DENTISTAS ---
+        if (selectDentista) {
+            selectDentista.addEventListener('change', function() {
+                let dentistaId = this.value;
+                let novaUrl = "/agenda/events/";
+
+                // Se não for "todos", adiciona o parâmetro de query
+                if (dentistaId !== 'todos') {
+                    novaUrl += "?dentista_id=" + dentistaId;
+                }
+
+                // Remove a fonte atual e adiciona a filtrada (Faz o refetch automático)
+                calendar.removeAllEventSources();
+                calendar.addEventSource(novaUrl);
+            });
+        }
+
+        // --- FUNÇÃO AUXILIAR: DIAS VAZIOS NA LISTA ---
+        function preencherDiasVazios(startDate, endDate) {
+            setTimeout(() => {
+                const table = document.querySelector('.fc-list-table tbody');
+                if (!table) return;
+
+                table.querySelectorAll('.row-vazia-custom').forEach(el => el.remove());
+
+                let current = new Date(startDate);
+                for (let i = 0; i < 7; i++) {
+                    let ano = current.getFullYear();
+                    let mes = String(current.getMonth() + 1).padStart(2, '0');
+                    let dia = String(current.getDate()).padStart(2, '0');
+                    let dataString = `${ano}-${mes}-${dia}`;
+                    
+                    let diaExistente = table.querySelector(`.fc-list-day[data-date="${dataString}"]`);
+
+                    if (!diaExistente) {
+                        let diaSemana = current.toLocaleDateString('pt-BR', { weekday: 'long' }).toUpperCase();
+                        let dataFormatada = current.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' }).toUpperCase();
+
+                        const headerHtml = `
+                            <tr class="fc-list-day fc-day row-vazia-custom" data-date="${dataString}">
+                                <th colspan="3">
+                                    <div class="fc-list-day-cushion fc-cell-shaded">
+                                        <a class="fc-list-day-text">${diaSemana}</a>
+                                        <a class="fc-list-day-side-text">${dataFormatada}</a>
+                                    </div>
+                                </th>
+                            </tr>
+                            <tr class="fc-list-event row-vazia-custom">
+                                <td class="fc-list-event-time"></td>
+                                <td class="fc-list-event-graphic"><span class="fc-list-event-dot" style="border-color: #cbd5e1; opacity: 0.5;"></span></td>
+                                <td class="fc-list-event-title"><em style="color: #94a3b8; font-size: 0.8rem;">Nenhum paciente agendado</em></td>
+                            </tr>
+                        `;
+
+                        let rows = Array.from(table.querySelectorAll('.fc-list-day'));
+                        let inserido = false;
+
+                        for (let row of rows) {
+                            if (row.getAttribute('data-date') > dataString) {
+                                row.insertAdjacentHTML('beforebegin', headerHtml);
+                                inserido = true;
+                                break;
+                            }
+                        }
+                        if (!inserido) table.insertAdjacentHTML('beforeend', headerHtml);
+                    }
+                    current.setDate(current.getDate() + 1);
+                }
+            }, 50);
+        }
+
+        // --- LÓGICA DOS BOTÕES DO MODAL (SALVAR NO DJANGO) ---
+        document.getElementById('btnConfirmarReagendar').addEventListener('click', function () {
+            if (!infoReagendamento) return;
+
+            const novaHora = document.getElementById('inputHoraModal').value;
+            if (!novaHora) {
+                alert("Por favor, selecione um horário.");
+                return;
+            }
+
+            const dataBase = infoReagendamento.event.start;
+            const [horas, minutos] = novaHora.split(':');
+            dataBase.setHours(parseInt(horas), parseInt(minutos), 0);
+
+            this.disabled = true;
+            this.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Salvando...';
+
+            fetch("/agenda/reagendar-drag/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: JSON.stringify({
+                    id: infoReagendamento.event.id,
+                    novo_horario: dataBase.toISOString()
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    modalReagendar.hide();
+                    calendar.refetchEvents();
+                } else {
+                    alert("Erro ao reagendar: " + data.error);
+                    infoReagendamento.revert();
+                    modalReagendar.hide();
+                }
+            })
+            .catch(() => {
+                alert("Erro técnico ao conectar com o servidor.");
+                infoReagendamento.revert();
+                modalReagendar.hide();
+            })
+            .finally(() => {
+                this.disabled = false;
+                this.innerText = 'Confirmar Reagendamento';
+            });
+        });
+
+        document.getElementById('btnCancelarReagendar').addEventListener('click', function () {
+            if (infoReagendamento) infoReagendamento.revert();
+            modalReagendar.hide();
+        });
+    });
+</script>
+{% endblock %}

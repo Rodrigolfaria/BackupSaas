@@ -1,0 +1,32 @@
+<tr>
+    <td class="ps-3"><code class="text-muted">#{{ p.id }}</code></td>
+    <td>
+        <div class="fw-bold text-dark">{{ p.nome }}</div>
+        <span class="badge bg-light text-primary border border-primary-subtle" style="font-size: 0.7rem;">
+            {{ p.perfil|upper }}
+        </span>
+    </td>
+    <td class="text-center">
+        <span class="badge {% if p.dias > 365 %}bg-danger{% elif p.dias > 180 %}bg-warning text-dark{% else %}bg-info{% endif %}">
+            {{ p.dias }} dias
+        </span>
+    </td>
+    <td class="text-center">
+        <div class="fw-bold {% if p.urgencia > 500 %}text-danger{% else %}text-muted{% endif %}" style="font-size: 0.9rem;">
+            {{ p.urgencia }}
+        </div>
+    </td>
+    <td>
+        <div class="fw-bold text-dark mb-1" style="font-size: 0.85rem;">{{ p.ultimo_procedimento }}</div>
+        <div class="text-muted" style="font-size: 0.75rem; max-height: 45px; overflow-y: auto; line-height: 1.2;">
+            {{ p.historico }}
+        </div>
+    </td>
+    <td class="text-center">
+        {% if p.telefone %}
+        <a href="https://wa.me/55{{ p.telefone }}" target="_blank" class="btn btn-sm btn-light border text-success">
+            <i class="bi bi-whatsapp"></i>
+        </a>
+        {% endif %}
+    </td>
+</tr>

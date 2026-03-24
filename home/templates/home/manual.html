@@ -1,0 +1,210 @@
+{% extends 'home/base.html' %}
+
+{% block title %}Manual de Operação | Gestão Premium{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-3 mb-4">
+            <div class="card border-0 shadow-sm rounded-4 sticky-top" style="top: 20px;">
+                <div class="card-body p-4">
+                    <h6 class="fw-bold text-dark mb-3">Tópicos do Guia</h6>
+                    <div id="manual-list" class="list-group list-group-flush small">
+                        <a class="list-group-item list-group-item-action border-0 py-2 rounded-3 mb-1 active"
+                            href="#introducao">
+                            <i class="bi bi-info-circle me-2"></i>Introdução
+                        </a>
+                        <a class="list-group-item list-group-item-action border-0 py-2 rounded-3 mb-1"
+                            href="#agendamento">
+                            <i class="bi bi-calendar-plus me-2"></i>Agendamento
+                        </a>
+                        <a class="list-group-item list-group-item-action border-0 py-2 rounded-3 mb-1"
+                            href="#pacientes">
+                            <i class="bi bi-person-badge me-2"></i>Gestão de Pacientes
+                        </a>
+                        <a class="list-group-item list-group-item-action border-0 py-2 rounded-3 mb-1"
+                            href="#financeiro">
+                            <i class="bi bi-cash-stack me-2"></i>Fluxo Financeiro
+                        </a>
+                        <a class="list-group-item list-group-item-action border-0 py-2 rounded-3 mb-1"
+                            href="#relatorios">
+                            <i class="bi bi-bar-chart-line me-2"></i>Relatórios
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-9">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-5">
+                <div class="bg-primary p-5 text-white position-relative">
+                    <div class="position-relative z-index-1">
+                        <h1 class="fw-extrabold display-5 mb-2">Manual do Sistema</h1>
+                        <p class="opacity-75 fs-5">Tudo o que você precisa saber para operar sua clínica com excelência.
+                        </p>
+                    </div>
+                    <i class="bi bi-journal-text position-absolute end-0 bottom-0 opacity-10 m-4"
+                        style="font-size: 150px;"></i>
+                </div>
+
+                <div class="card-body p-4 p-md-5">
+
+                    <section id="introducao" class="mb-5">
+                        <h3 class="fw-bold text-dark"><i class="bi bi-star-fill text-warning me-2"></i>Bem-vindo(a)</h3>
+                        <p class="text-secondary leading-relaxed">
+                            Este sistema foi desenvolvido para simplificar o dia a dia clínico. O foco é reduzir o tempo
+                            administrativo para que você possa focar no que importa: <strong>o paciente</strong>.
+                        </p>
+                    </section>
+
+                    <hr class="my-5 opacity-10">
+
+                    <section id="agendamento" class="mb-5">
+                        <h4 class="fw-bold text-dark mb-4">1. Fluxo de Agendamento</h4>
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="p-3 bg-light rounded-4 h-100 border">
+                                    <h6 class="fw-bold">Como agendar?</h6>
+                                    <p class="small text-muted mb-0">Acesse a <strong>Agenda</strong>, escolha o horário
+                                        vago e clique. Selecione o paciente ou cadastre um novo na hora.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="p-3 bg-light rounded-4 h-100 border">
+                                    <h6 class="fw-bold">Status das Consultas</h6>
+                                    <ul class="x-small text-muted ps-3 mb-0">
+                                        <li class="mb-1"><strong>Agendada:</strong> Horário reservado.</li>
+                                        <li class="mb-1"><strong>Confirmada:</strong> Paciente confirmou presença.</li>
+                                        <li><strong>Finalizada:</strong> Pronta para lançamento financeiro.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="pacientes" class="mb-5">
+                        <h4 class="fw-bold text-dark mb-4">2. Prontuário e Pacientes</h4>
+                        <p class="text-secondary leading-relaxed">O cadastro do paciente é o coração do sistema.
+                            Centralizamos histórico, documentos e contatos em um só lugar.</p>
+                        <div class="alert alert-info border-0 rounded-4 p-4">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-lightbulb fs-3 me-3"></i>
+                                <div>
+                                    <h6 class="fw-bold mb-1">Dica de Produtividade</h6>
+                                    <p class="mb-0 small">No histórico do paciente, você visualiza todos os
+                                        procedimentos realizados e datas, facilitando o acompanhamento de tratamentos
+                                        longos.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="financeiro" class="mb-5">
+                        <h4 class="fw-bold text-dark mb-4">3. Gestão Financeira e Fluxo de Caixa</h4>
+                        <p class="text-secondary leading-relaxed">O sistema garante que nenhuma receita seja esquecida.
+                            O fluxo financeiro é alimentado pela finalização das consultas.</p>
+
+                        <div class="row g-4 mt-2">
+                            <div class="col-md-6">
+                                <div class="card border-0 bg-success bg-opacity-10 p-4 rounded-4 h-100">
+                                    <h6 class="fw-bold text-success"><i class="bi bi-arrow-up-circle me-2"></i>Entradas
+                                        (Receitas)</h6>
+                                    <p class="small text-dark opacity-75 mb-0">
+                                        Ao finalizar um atendimento, o sistema gera uma <strong>Pendência</strong>. Você
+                                        deve confirmar o método de pagamento (Pix, Cartão ou Dinheiro) para efetivar a
+                                        baixa.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card border-0 bg-danger bg-opacity-10 p-4 rounded-4 h-100">
+                                    <h6 class="fw-bold text-danger"><i class="bi bi-arrow-down-circle me-2"></i>Saídas
+                                        (Despesas)</h6>
+                                    <p class="small text-dark opacity-75 mb-0">
+                                        Lance manualmente custos fixos (aluguel, luz) e materiais. Isso permite calcular
+                                        seu <strong>Lucro Real</strong> automaticamente.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="relatorios" class="mb-5">
+                        <h4 class="fw-bold text-dark mb-4">4. Inteligência e Relatórios</h4>
+                        <p class="text-secondary leading-relaxed">Transforme dados em decisões através de métricas
+                            geradas em tempo real.</p>
+
+                        <div class="list-group list-group-flush border rounded-4 mt-3">
+                            <div class="list-group-item p-4">
+                                <h6 class="fw-bold mb-1 text-primary"><i class="bi bi-pie-chart me-2"></i>Desempenho
+                                    Clínico</h6>
+                                <p class="text-muted small mb-0">Volume de atendimentos e procedimentos mais realizados.
+                                </p>
+                            </div>
+                            <div class="list-group-item p-4">
+                                <h6 class="fw-bold mb-1 text-success"><i class="bi bi-cash-coin me-2"></i>DRE
+                                    Simplificado</h6>
+                                <p class="text-muted small mb-0">Onde o faturamento bruto encontra as despesas para
+                                    mostrar sua lucratividade.</p>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-secondary border-0 rounded-4 p-4 mt-4">
+                            <h6 class="fw-bold"><i class="bi bi-printer me-2"></i>Exportação</h6>
+                            <p class="mb-0 small">Todos os relatórios podem ser exportados em <strong>PDF ou
+                                    Excel</strong> para análise offline ou contabilidade.</p>
+                        </div>
+                    </section>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .fw-extrabold {
+        font-weight: 800;
+    }
+
+    .leading-relaxed {
+        line-height: 1.8;
+    }
+
+    section {
+        scroll-margin-top: 30px;
+    }
+
+    .x-small {
+        font-size: 0.75rem;
+    }
+
+    .list-group-item-action.active {
+        background-color: #f0f7ff !important;
+        color: #0d6efd !important;
+        font-weight: bold;
+        border-left: 4px solid #0d6efd !important;
+    }
+
+    .sticky-top {
+        z-index: 1020;
+    }
+
+    /* Suaviza a rolagem interna */
+    html {
+        scroll-behavior: smooth;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const manualNav = document.querySelector('#manual-list');
+        if (manualNav) {
+            new bootstrap.ScrollSpy(document.body, {
+                target: '#manual-list',
+                offset: 100
+            });
+        }
+    });
+</script>
+{% endblock %}

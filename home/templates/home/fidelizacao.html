@@ -1,0 +1,535 @@
+{% extends "home/base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    
+    <!-- <div class="ia-notifications-container mb-4">
+        {% for nota in notifications_ia %}
+        <div class="ia-glass-card {% if nota.tipo == 'perigo' %}ia-card-perigo{% elif nota.tipo == 'niver' %}ia-card-niver{% else %}ia-card-alerta{% endif %} animate__animated animate__fadeInDown">
+            <div class="ia-icon-wrapper">
+                {% if nota.tipo == 'perigo' %}🔥{% elif nota.tipo == 'niver' %}🎂{% else %}💡{% endif %}
+            </div>
+            <div class="ia-text-content">
+                <strong>Inteligência Artificial</strong>
+                <span>{{ nota.msg }}</span>
+            </div>
+            <button type="button" class="btn-close ms-auto" onclick="this.parentElement.remove()" style="font-size: 0.6rem;"></button>
+        </div>
+        {% endfor %}
+    </div> -->
+
+    <div class="d-flex justify-content-between align-items-end mb-4 px-2">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1">
+                    <li class="breadcrumb-item"><a href="#" class="text-decoration-none text-primary">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Fidelização</li>
+                </ol>
+            </nav>
+            <h2 class="fw-bold text-dark mb-0">✨ Gestão Inteligente</h2>
+            <p class="text-muted mb-0">
+                <span class="badge bg-primary-subtle text-primary me-2">IA Ativa</span> 
+                <!-- Mix Temporal: 90d, 180d e +365d segmentados. -->
+            </p>
+        </div>
+        <div class="text-end">
+            <button id="btnGerarRelatorio" class="btn btn-white shadow-sm rounded-pill px-4 border fw-bold text-primary" onclick="dispararIA()">
+                <i class="bi bi-robot me-2"></i>Gerar Relatório com IA
+            </button>
+        </div>
+    </div>
+
+    <ul class="nav nav-tabs border-0 mb-4 gap-2" id="fidelizacaoTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active rounded-pill px-4 fw-bold border shadow-sm" id="sugestoes-tab" data-bs-toggle="tab" data-bs-target="#sugestoes" type="button" role="tab">
+                <i class="bi bi-magic me-2"></i>Sugestões do Dia
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link rounded-pill px-4 fw-bold border shadow-sm" id="historico-tab" data-bs-toggle="tab" data-bs-target="#historico" type="button" role="tab">
+                <i class="bi bi-clock-history me-2"></i>Lista de Acompanhamento
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="fidelizacaoTabsContent">
+        <div class="tab-pane fade show active" id="sugestoes" role="tabpanel">
+            
+            <div id="loadingGeral" class="d-none text-center py-5">
+                <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
+                <h4 class="mt-3 fw-bold">Analisando Mix Temporal...</h4>
+                <p class="text-muted">Segmentando pacientes por criticidade clínica.</p>
+            </div>
+
+            <div id="listaResultados">
+                {% if not pacientes_retorno and not pacientes_alerta and not pacientes_risco %}
+                <div class="card border-0 shadow-sm rounded-4 p-5 text-center">
+                    <i class="bi bi-graph-up-arrow display-1 text-light mb-3"></i>
+                    <h4>Nenhum relatório disponível</h4>
+                    <p class="text-muted">Clique em "Gerar Relatório com IA" para identificar oportunidades.</p>
+                </div>
+                {% else %}
+                
+                {% if pacientes_retorno %}
+                <div class="mb-5">
+                    <div class="d-flex align-items-center mb-3 px-2">
+                        <div class="bg-primary text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                            <i class="bi bi-person-plus-fill"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-0">Alerta Precoce</h5>
+                            <small class="text-muted">Janela ideal para manutenção (3-6 meses)</small>
+                        </div>
+                    </div>
+                    
+                    <div class="card border-0 shadow-lg rounded-4 overflow-hidden border-top border-primary border-4">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="bg-primary-subtle text-primary">
+                                    <tr>
+                                        <th class="ps-4 py-4 border-0 text-uppercase x-small fw-bolder">Paciente</th>
+                                        <th class="py-4 border-0 text-uppercase x-small fw-bolder">Foco em Continuidade</th>
+                                        <th class="py-4 border-0 text-uppercase x-small fw-bolder">Ausência</th>
+                                        <th class="pe-4 py-4 border-0 text-center text-uppercase x-small fw-bolder">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for p in pacientes_retorno %}
+                                    <tr id="row-retorno-{{ p.paciente_id }}">
+                                        <td class="ps-4 py-4">
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar-circle me-3 bg-primary-subtle text-primary fw-bold">{{ p.nome|slice:":1" }}</div>
+                                                <div>
+                                                    <div class="fw-bold text-dark">{{ p.nome }}</div>
+                                                    <div class="text-muted x-small"><i class="bi bi-whatsapp me-1"></i>{{ p.telefone|default:"--" }}</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="ia-reasoning-box js-reasoning" style="background: #f0f7ff; border-left-color: #0d6efd; color: #084298;">
+                                                <i class="bi bi-shield-check me-1 text-primary"></i> {{ p.reasoning }}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-primary-subtle text-primary rounded-pill">{{ p.dias_ausente }} dias</span>
+                                        </td>
+                                        <td class="pe-4 text-center">
+                                            <div class="d-flex justify-content-center gap-2">
+                                                <button class="btn btn-ia-action btn-ia-insight" 
+                                                        data-id="{{ p.paciente_id }}" 
+                                                        data-nome="{{ p.nome }}" 
+                                                        data-telefone="{{ p.telefone }}"
+                                                        data-insight="{{ p.insight_whatsapp }}">
+                                                    <i class="bi bi-robot me-1"></i> Abordar
+                                                </button>
+                                                <button class="btn btn-outline-secondary rounded-pill btn-sm" onclick="atualizarStatus('{{ p.historico_id }}', 'ignorar', 'row-retorno-{{ p.paciente_id }}')">
+                                                    <i class="bi bi-eye-slash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+
+                {% if pacientes_alerta %}
+                <div class="mb-5">
+                    <div class="d-flex align-items-center mb-3 px-2">
+                        <div class="bg-warning text-dark rounded-circle p-2 me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                            <i class="bi bi-clock-history"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-0">Prevenção em Atraso</h5>
+                            <small class="text-muted">Pacientes ausentes entre 6 a 12 meses</small>
+                        </div>
+                    </div>
+                    
+                    <div class="card border-0 shadow-lg rounded-4 overflow-hidden border-top border-warning border-4">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="bg-warning-subtle text-warning-emphasis">
+                                    <tr>
+                                        <th class="ps-4 py-4 border-0 text-uppercase x-small fw-bolder">Paciente</th>
+                                        <th class="py-4 border-0 text-uppercase x-small fw-bolder">Análise Preventiva</th>
+                                        <th class="py-4 border-0 text-uppercase x-small fw-bolder">Status</th>
+                                        <th class="pe-4 py-4 border-0 text-center text-uppercase x-small fw-bolder">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for p in pacientes_alerta %}
+                                    <tr id="row-alerta-{{ p.paciente_id }}">
+                                        <td class="ps-4 py-4">
+                                            <div class="fw-bold text-dark">{{ p.nome }}</div>
+                                            <div class="text-muted x-small"><i class="bi bi-whatsapp me-1"></i>{{ p.telefone|default:"--" }}</div>
+                                        </td>
+                                        <td>
+                                            <div class="ia-reasoning-box js-reasoning" style="background: #fffdf5; border-left-color: #ffc107;">
+                                                <i class="bi bi-hourglass-split me-1 text-warning"></i> {{ p.reasoning }}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="text-warning-emphasis fw-bold small">{{ p.dias_ausente }} dias</span>
+                                        </td>
+                                        <td class="pe-4 text-center">
+                                            <div class="d-flex justify-content-center gap-2">
+                                                <button class="btn btn-warning btn-sm rounded-pill px-3 fw-bold btn-ia-insight" 
+                                                        data-id="{{ p.paciente_id }}" 
+                                                        data-nome="{{ p.nome }}" 
+                                                        data-telefone="{{ p.telefone }}"
+                                                        data-insight="{{ p.insight_whatsapp }}">
+                                                    <i class="bi bi-robot me-1"></i> Abordar
+                                                </button>
+                                                <button class="btn btn-outline-secondary rounded-pill btn-sm" onclick="atualizarStatus('{{ p.historico_id }}', 'ignorar', 'row-alerta-{{ p.paciente_id }}')">
+                                                    <i class="bi bi-eye-slash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+
+
+                {% if pacientes_risco %}
+                <div class="mb-5">
+                    <div class="d-flex align-items-center mb-3 px-2">
+                        <div class="bg-danger text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                            <i class="bi bi-exclamation-octagon-fill"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-0 text-danger">Risco Crítico de Abandono</h5>
+                            <small class="text-muted">Ausência superior a 1 ano ou Interrupção Grave</small>
+                        </div>
+                    </div>
+
+                    <div class="card border-0 shadow-lg rounded-4 overflow-hidden border-top border-danger border-4">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="bg-danger-subtle">
+                                    <tr>
+                                        <th class="ps-4 py-4 border-0 text-uppercase x-small fw-bolder text-danger">Paciente Crítico</th>
+                                        <th class="py-4 border-0 text-uppercase x-small fw-bolder text-danger">Análise de Risco</th>
+                                        <th class="py-4 border-0 text-uppercase x-small fw-bolder text-danger">Tempo Ausente</th>
+                                        <th class="pe-4 py-4 border-0 text-center text-uppercase x-small fw-bolder text-danger">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for p in pacientes_risco %}
+                                    <tr id="row-risco-{{ p.paciente_id }}">
+                                        <td class="ps-4 py-4">
+                                            <div class="fw-bold text-dark">{{ p.nome }}</div>
+                                            <div class="text-muted x-small"><i class="bi bi-whatsapp me-1"></i>{{ p.telefone|default:"--" }}</div>
+                                        </td>
+                                        <td>
+                                            <div class="ia-reasoning-box border-danger text-danger js-reasoning" style="background-color: #fff5f5 !important; border-left-color: #dc3545;">
+                                                <i class="bi bi-shield-exclamation me-1"></i> {{ p.reasoning }}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-danger rounded-pill px-3 py-2">
+                                                <i class="bi bi-calendar-x me-1"></i> {{ p.dias_ausente }} dias
+                                            </span>
+                                        </td>
+                                        <td class="pe-4 text-center">
+                                            <div class="d-flex justify-content-center gap-2">
+                                                <button class="btn btn-danger btn-sm rounded-pill px-3 fw-bold btn-ia-insight" 
+                                                        data-id="{{ p.paciente_id }}" 
+                                                        data-nome="{{ p.nome }}" 
+                                                        data-telefone="{{ p.telefone }}"
+                                                        data-insight="{{ p.insight_whatsapp }}">
+                                                    <i class="bi bi-lightning-charge-fill me-1"></i> Resgatar
+                                                </button>
+                                                <button class="btn btn-outline-secondary rounded-pill btn-sm" onclick="atualizarStatus('{{ p.historico_id }}', 'ignorar', 'row-risco-{{ p.paciente_id }}')">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                
+
+                
+
+                {% endif %} </div>
+        </div>
+
+        <div class="tab-pane fade" id="historico" role="tabpanel">
+    
+        {% if h_risco %}
+        <div class="mb-5">
+            <h6 class="fw-bold text-danger border-bottom pb-2 mb-3">
+                <i class="bi bi-exclamation-octagon-fill me-2"></i>Acompanhamento: Risco Crítico
+            </h6>
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-danger-subtle text-danger">
+                            <tr>
+                                <th class="ps-4 py-3 border-0 small text-uppercase fw-bold">Paciente</th>
+                                <th class="py-3 border-0 small text-uppercase fw-bold">Último Insight</th>
+                                <th class="py-3 border-0 small text-uppercase fw-bold">Status</th>
+                                <th class="pe-4 py-3 border-0 text-center small text-uppercase fw-bold">Gerenciar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for h in h_risco %}
+                            <tr>
+                                <td class="ps-4 py-3 fw-bold">{{ h.paciente.nome }}</td>
+                                <td><div class="text-muted small">{{ h.insight|truncatechars:100 }}</div></td>
+                                <td>
+                                    <span class="badge rounded-pill {% if h.status == 'contatado' %}bg-success{% elif h.status == 'pendente' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">
+                                        {{ h.status|upper }}
+                                    </span>
+                                </td>
+                                <td class="pe-4 text-center">
+                                    <select class="form-select form-select-sm rounded-pill" onchange="atualizarStatus('{{ h.id }}', this.value)">
+                                        <option value="pendente" {% if h.status == 'pendente' %}selected{% endif %}>Pendente</option>
+                                        <option value="contatado" {% if h.status == 'contatado' %}selected{% endif %}>Contatado</option>
+                                        <option value="recusou" {% if h.status == 'recusou' %}selected{% endif %}>Recusou</option>
+                                        <option value="ignorar" {% if h.status == 'ignorar' %}selected{% endif %}>Ignorar</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if h_alerta %}
+        <div class="mb-5">
+            <h6 class="fw-bold text-warning-emphasis border-bottom pb-2 mb-3">
+                <i class="bi bi-clock-history me-2"></i>Acompanhamento: Prevenção em Atraso
+            </h6>
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-warning-subtle text-warning-emphasis">
+                            <tr>
+                                <th class="ps-4 py-3 border-0 small text-uppercase fw-bold">Paciente</th>
+                                <th class="py-3 border-0 small text-uppercase fw-bold">Último Insight</th>
+                                <th class="py-3 border-0 small text-uppercase fw-bold">Status</th>
+                                <th class="pe-4 py-3 border-0 text-center small text-uppercase fw-bold">Gerenciar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for h in h_alerta %}
+                            <tr>
+                                <td class="ps-4 py-3 fw-bold">{{ h.paciente.nome }}</td>
+                                <td><div class="text-muted small">{{ h.insight|truncatechars:100 }}</div></td>
+                                <td>
+                                    <span class="badge rounded-pill {% if h.status == 'contatado' %}bg-success{% elif h.status == 'pendente' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">
+                                        {{ h.status|upper }}
+                                    </span>
+                                </td>
+                                <td class="pe-4 text-center">
+                                    <select class="form-select form-select-sm rounded-pill" onchange="atualizarStatus('{{ h.id }}', this.value)">
+                                        <option value="pendente" {% if h.status == 'pendente' %}selected{% endif %}>Pendente</option>
+                                        <option value="contatado" {% if h.status == 'contatado' %}selected{% endif %}>Contatado</option>
+                                        <option value="recusou" {% if h.status == 'recusou' %}selected{% endif %}>Recusou</option>
+                                        <option value="ignorar" {% if h.status == 'ignorar' %}selected{% endif %}>Ignorar</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if h_retorno %}
+        <div class="mb-5">
+            <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">
+                <i class="bi bi-shield-check me-2"></i>Acompanhamento: Alerta Precoce
+            </h6>
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-primary-subtle text-primary">
+                            <tr>
+                                <th class="ps-4 py-3 border-0 small text-uppercase fw-bold">Paciente</th>
+                                <th class="py-3 border-0 small text-uppercase fw-bold">Último Insight</th>
+                                <th class="py-3 border-0 small text-uppercase fw-bold">Status</th>
+                                <th class="pe-4 py-3 border-0 text-center small text-uppercase fw-bold">Gerenciar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for h in h_retorno %}
+                            <tr>
+                                <td class="ps-4 py-3 fw-bold">{{ h.paciente.nome }}</td>
+                                <td><div class="text-muted small">{{ h.insight|truncatechars:100 }}</div></td>
+                                <td>
+                                    <span class="badge rounded-pill {% if h.status == 'contatado' %}bg-success{% elif h.status == 'pendente' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">
+                                        {{ h.status|upper }}
+                                    </span>
+                                </td>
+                                <td class="pe-4 text-center">
+                                    <select class="form-select form-select-sm rounded-pill" onchange="atualizarStatus('{{ h.id }}', this.value)">
+                                        <option value="pendente" {% if h.status == 'pendente' %}selected{% endif %}>Pendente</option>
+                                        <option value="contatado" {% if h.status == 'contatado' %}selected{% endif %}>Contatado</option>
+                                        <option value="recusou" {% if h.status == 'recusou' %}selected{% endif %}>Recusou</option>
+                                        <option value="ignorar" {% if h.status == 'ignorar' %}selected{% endif %}>Ignorar</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if not h_risco and not h_alerta and not h_retorno %}
+        <div class="text-center py-5">
+            <i class="bi bi-clipboard-x display-4 text-light"></i>
+            <p class="text-muted mt-3">Nenhum histórico de acompanhamento disponível.</p>
+        </div>
+        {% endif %}
+
+    </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalFidelizar" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-5 overflow-hidden">
+            <div class="bg-primary p-4 text-white d-flex align-items-center justify-content-between">
+                <h5 class="mb-0 fw-bold"><i class="bi bi-stars me-2"></i>Estratégia OdontoClinics AI</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div id="modalContent">
+                    <label class="form-label small fw-bold text-muted text-uppercase">Abordagem Sugerida:</label>
+                    <div class="p-3 bg-light rounded-4 mb-3"><strong id="nomePacienteModal" class="fs-5 text-primary"></strong></div>
+                    <textarea id="textoZap" class="form-control border-0 bg-light rounded-4 p-3 mb-3" rows="8" style="resize: none;"></textarea>
+                    <div id="iaBadge" class="d-flex align-items-center p-3 rounded-4 bg-primary-subtle text-primary">
+                        <i class="bi bi-shield-check fs-4 me-3"></i>
+                        <span class="x-small">Esta mensagem foi otimizada para evitar tom de cobrança e focar em saúde bucal.</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-0 p-4 pt-0">
+                <button type="button" class="btn btn-success rounded-pill w-100 py-3 shadow-lg fw-bold" onclick="abrirZap()">
+                    Enviar para WhatsApp <i class="bi bi-whatsapp ms-2"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Estilos Mantidos e Refinados */
+    :root { --primary-color: #0061ff; }
+    .x-small { font-size: 0.7rem; }
+    .avatar-circle { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+    .ia-reasoning-box { padding: 12px; border-radius: 12px; font-size: 0.82rem; line-height: 1.4; border-left: 4px solid; }
+    .btn-ia-action { background: #6366f1; color: white; border-radius: 20px; padding: 6px 16px; border: none; transition: all 0.3s ease; font-weight: 600; font-size: 0.85rem; }
+    .btn-ia-action:hover { background: #4f46e5; transform: translateY(-2px); color: white; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4); }
+    .ia-glass-card { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 1); border-radius: 18px; padding: 12px 20px; display: flex; align-items: center; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08); margin-bottom: 10px; }
+    .ia-card-perigo { border-left: 6px solid #ff4757; }
+    .ia-card-alerta { border-left: 6px solid #ff9f43; }
+    .ia-text-content strong { display: block; font-size: 0.7rem; text-transform: uppercase; color: #4f46e5; letter-spacing: 0.5px; }
+</style>
+
+<script>
+    let foneGlobal = "";
+    let bsModal = null;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const modalEl = document.getElementById('modalFidelizar');
+        if (modalEl) bsModal = new bootstrap.Modal(modalEl);
+
+        document.body.addEventListener('click', function(e) {
+            const btn = e.target.closest('.btn-ia-insight');
+            if (btn) {
+                foneGlobal = btn.dataset.telefone;
+                const nome = btn.dataset.nome;
+                const insight_wa = btn.dataset.insight; // Pega o texto do WhatsApp já gerado
+                
+                document.getElementById('nomePacienteModal').innerText = nome;
+                document.getElementById('textoZap').value = insight_wa || `Olá ${nome}! Notamos que faz tempo que não nos visita. Vamos agendar uma revisão?`;
+                bsModal.show();
+            }
+        });
+    });
+
+    async function dispararIA() {
+        const btn = document.getElementById('btnGerarRelatorio');
+        const lista = document.getElementById('listaResultados');
+        const loading = document.getElementById('loadingGeral');
+
+        btn.disabled = true;
+        btn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>Processando Mix Temporal...`;
+        lista.classList.add('d-none');
+        loading.classList.remove('d-none');
+
+        try {
+            const response = await fetch('/fidelizacao/gerar-analise-completa/', {
+                method: 'POST',
+                headers: { 'X-CSRFToken': '{{ csrf_token }}' }
+            });
+            const data = await response.json();
+            if (data.success) {
+                window.location.reload();
+            } else {
+                alert("Erro: " + data.error);
+                lista.classList.remove('d-none');
+                loading.classList.add('d-none');
+            }
+        } catch (e) {
+            alert("Erro de conexão.");
+            lista.classList.remove('d-none');
+            loading.classList.add('d-none');
+        } finally {
+            btn.disabled = false;
+        }
+    }
+
+    async function atualizarStatus(h_id, status, rowId = null) {
+        const formData = new FormData();
+        formData.append('status', status);
+        formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+        try {
+            const response = await fetch(`/fidelizacao/mudar-status/${h_id}/`, { method: 'POST', body: formData });
+            if (response.ok && rowId) {
+                const element = document.getElementById(rowId);
+                if (element) {
+                    element.classList.add('animate__animated', 'animate__fadeOutRight');
+                    setTimeout(() => element.remove(), 500);
+                }
+            }
+        } catch (e) { console.error(e); }
+    }
+
+    function abrirZap() {
+        if (!foneGlobal || foneGlobal === "None") { alert("Telefone não cadastrado."); return; }
+        let fone = foneGlobal.replace(/\D/g, '');
+        if (fone.length === 11) fone = '55' + fone;
+        const texto = encodeURIComponent(document.getElementById('textoZap').value);
+        window.open(`https://wa.me/${fone}?text=${texto}`, '_blank');
+        bsModal.hide();
+    }
+</script>
+{% endblock %}

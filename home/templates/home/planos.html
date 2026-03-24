@@ -1,0 +1,327 @@
+{% extends "home/base.html" %}
+{% load static %}
+
+{% block title %}Escolha Seu Plano | OdontoClinics{% endblock %}
+
+{% block content %}
+<style>
+    /* --- CUSTOM CARDS STYLES --- */
+    .pricing-container {
+        padding-top: 3rem;
+        padding-bottom: 5rem;
+    }
+
+    /* Branding do Título */
+    .brand-odonto { color: #000000; }
+    .brand-clinics {
+        background: linear-gradient(90deg, #25AAE2 0%, #0d6efd 100%);
+        -webkit-background-clip: text;
+        background-clip: text; /* Compatibilidade padrão */
+        -webkit-text-fill-color: transparent;
+        font-weight: 800;
+    }
+
+    /* Card Compacto e Elegante */
+    .plan-card {
+        border-radius: 24px;
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        border: 2px solid transparent;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        background-color: white;
+        min-width: 320px; 
+    }
+
+    .plan-card:hover {
+        transform: translateY(-8px) scale(1.01);
+        box-shadow: 0 20px 40px rgba(15, 23, 42, 0.1) !important;
+    }
+
+    .feature-icon {
+        width: 22px;
+        height: 22px;
+        margin-right: 10px;
+        font-size: 0.95rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .btn-assinar {
+        padding: 14px;
+        font-weight: 700;
+        border-radius: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 0.8rem;
+        width: 100%;
+        transition: all 0.3s;
+    }
+
+    /* --- PLANO ESSENTIAL --- */
+    .essential-card { border: 1px solid #e2e8f0; }
+    .essential-card:hover { border-color: #25AAE2; }
+
+    /* --- PLANO PROFESSIONAL (DESTAQUE PREMIUM) --- */
+    .prof-card {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        color: white !important;
+        position: relative;
+        transform: scale(1.03); 
+        z-index: 2;
+    }
+
+    .prof-card .text-dark, .prof-card .text-muted {
+        color: rgba(255, 255, 255, 0.7) !important;
+    }
+
+    .prof-card h6 { color: #25AAE2 !important; letter-spacing: 1px; }
+
+    /* Badge de Promoção */
+    .bestseller-badge {
+        position: absolute;
+        top: -14px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(90deg, #25AAE2 0%, #0d6efd 100%);
+        color: white;
+        padding: 6px 18px;
+        border-radius: 50px;
+        font-size: 0.7rem;
+        font-weight: 800;
+        letter-spacing: 0.5px;
+        box-shadow: 0 5px 15px rgba(37, 170, 226, 0.3);
+        z-index: 10;
+        display: flex; align-items: center; gap: 6px;
+        white-space: nowrap;
+    }
+
+    .old-price {
+        text-decoration: line-through;
+        font-size: 1rem;
+        color: #94a3b8;
+        margin-right: 6px;
+        font-weight: 400;
+    }
+
+    .prof-card .feature-icon i.bi-check-circle-fill {
+        color: #6ee7b7 !important;
+    }
+
+    /* Lista sem quebra de linha e fontes ajustadas */
+    .feature-list li {
+        white-space: nowrap;
+        margin-bottom: 0.9rem;
+        display: flex;
+        align-items: center;
+        font-size: 0.85rem;
+    }
+</style>
+
+<div class="container pricing-container">
+    <div class="text-center mb-5 pb-3">
+        <h1 class="display-6 fw-bold text-dark">
+            Potencialize sua <span class="brand-odonto">Odonto</span><span class="brand-clinics">Clinics</span>
+        </h1>
+        <p class="text-muted col-lg-6 mx-auto mt-3">
+            Sua clínica merece a melhor tecnologia para gestão e cuidado com os pacientes. 
+            Escolha o plano que impulsiona o seu crescimento.
+        </p>
+        
+        <div class="mt-4 d-flex justify-content-center align-items-center gap-3">
+            <span class="badge bg-light text-dark border px-3 py-2 rounded-pill shadow-sm">
+                <i class="bi bi-percent text-primary"></i> 20% de desconto no plano anual
+            </span>
+        </div>
+    </div>
+
+    <div class="row g-4 justify-content-center align-items-stretch">
+        
+        <div class="col-md-6 col-lg-4">
+            <div class="card plan-card essential-card border-0 shadow-sm p-3 p-lg-4">
+                <div class="card-body d-flex flex-column">
+                    <div class="mb-3 d-flex align-items-center justify-content-between">
+                        <h6 class="fw-bold text-secondary mb-0">ESSENTIAL</h6>
+                        <i class="bi bi-person-check fs-4 text-primary"></i>
+                    </div>
+
+                    <div class="my-3 pb-3 border-bottom">
+                        <span class="h3 fw-bold text-dark">R$ 99</span>
+                        <span class="text-muted small">/mês</span>
+                    </div>
+
+                    <ul class="list-unstyled mb-4 flex-grow-1 feature-list">
+                        <li><span class="feature-icon text-primary"><i class="bi bi-calendar-check"></i></span><strong>Agenda Sync</strong> (Google)</li>
+                        <li><span class="feature-icon text-primary"><i class="bi bi-people"></i></span>Até <strong>500 pacientes</strong> ativos</li>
+                        <li><span class="feature-icon text-primary"><i class="bi bi-clipboard-pulse"></i></span>Prontuário Digital Completo</li>
+                        <li><span class="feature-icon text-primary"><i class="bi bi-whatsapp"></i></span>Lembretes via Evolution API</li>
+                        <li class="text-muted opacity-50"><span class="feature-icon"><i class="bi bi-stars"></i></span>IA de Fidelização (Não incluso)</li>
+                    </ul>
+
+                    <a href="{% url 'criar_pagamento' %}?plano=essential" class="btn btn-outline-dark btn-assinar mt-auto">
+                        Assinar Essential
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <div class="card plan-card prof-card border-0 shadow-lg p-3 p-lg-4">
+                <div class="bestseller-badge">
+                    <i class="bi bi-fire text-warning"></i> PROMOÇÃO POR TEMPO LIMITADO
+                </div>
+
+                <div class="card-body d-flex flex-column">
+                    <div class="mb-3 d-flex align-items-center justify-content-between">
+                        <h6 class="fw-bold">PROFESSIONAL</h6>
+                        <i class="bi bi-patch-check-fill fs-4 text-primary"></i>
+                    </div>
+
+                    <div class="my-3 pb-3 border-bottom" style="border-color: rgba(255,255,255,0.1) !important;">
+                        <div class="d-flex align-items-end">
+                            <span class="old-price">R$ 189</span>
+                            <span class="h3 fw-bold text-white">R$ 149</span>
+                            <span class="text-muted small ms-1">/mês</span>
+                        </div>
+                    </div>
+
+                    <ul class="list-unstyled mb-4 flex-grow-1 feature-list">
+                        <li><span class="feature-icon"><i class="bi bi-stars text-primary"></i></span><strong>IA de Fidelização</strong></li>
+                        <li><span class="feature-icon"><i class="bi bi-check-circle-fill"></i></span>WhatsApp Auto-atendimento</li>
+                        <li><span class="feature-icon"><i class="bi bi-check-circle-fill"></i></span>Pacientes Ilimitados</li>
+                        <li><span class="feature-icon"><i class="bi bi-check-circle-fill"></i></span>Multiclínica (2 unidades)</li>
+                        <li><span class="feature-icon"><i class="bi bi-check-circle-fill"></i></span>Dashboards (Inteligentes)</li>
+                        <li><span class="feature-icon"><i class="bi bi-check-circle-fill"></i></span>Suporte VIP (WhatsApp)</li>
+                    </ul>
+
+                    <a href="{% url 'criar_pagamento' %}?plano=professional" class="btn btn-primary btn-assinar mt-auto shadow border-0" style="background: linear-gradient(90deg, #25AAE2 0%, #0d6efd 100%);">
+                        Ativar Professional
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-5">
+        <p class="text-muted small">
+            <i class="bi bi-shield-check text-success"></i> Pagamento seguro processado via <strong>Mercado Pago</strong>
+        </p>
+        <a href="https://wa.me/5524993267575" class="text-primary fw-bold text-decoration-none small">
+            Dúvidas sobre os planos? Fale com um consultor <i class="bi bi-whatsapp"></i>
+        </a>
+    </div>
+</div>
+
+
+<div class="modal fade" id="confirmPlanModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 24px; border: none; overflow: hidden;">
+            <div class="modal-header border-0 pb-0">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center p-4">
+                <div class="mb-3">
+                    <i class="bi bi-shield-check text-primary" style="font-size: 2.5rem;"></i>
+                </div>
+                <h4 class="fw-bold mb-1">Quase lá!</h4>
+                <p class="text-muted small">Confirme os detalhes da sua assinatura para o <br><strong id="selectedPlanName" class="text-dark"></strong></p>
+                
+                <div class="bg-light rounded-pill p-1 d-flex mb-4 mx-auto" style="width: fit-content; border: 1px solid #e2e8f0;">
+                    <button type="button" id="btnMensal" class="btn btn-sm rounded-pill px-4 fw-bold toggle-active" onclick="updateCycle('mensal')">Mensal</button>
+                    <button type="button" id="btnAnual" class="btn btn-sm rounded-pill px-4 fw-bold" onclick="updateCycle('anual')">Anual (-20%)</button>
+                </div>
+
+                <div class="bg-light p-3 rounded-4 mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="text-muted">Valor do Plano:</span>
+                        <span class="h4 fw-bold mb-0 text-primary" id="displayPrice">R$ 99,00</span>
+                    </div>
+                    <div class="d-flex justify-content-between border-top pt-2 mt-2">
+                        <span class="small text-muted">Recorrência:</span>
+                        <span id="cycleLabel" class="small fw-bold">Cobrança Mensal</span>
+                    </div>
+                </div>
+
+                <ul class="text-start small text-muted mb-4 ps-3">
+                    <li id="feat1">Integração Google Calendar</li>
+                    <li id="feat2">WhatsApp via Evolution API</li>
+                    <li id="feat3">Suporte OdontoClinics</li>
+                </ul>
+
+                <a href="#" id="finalCheckoutBtn" class="btn btn-primary w-100 p-3 fw-bold rounded-3 shadow-lg" style="background: linear-gradient(90deg, #25AAE2 0%, #0d6efd 100%); border: none;">
+                    CONFIRMAR E PAGAR
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Estilo para o botão ativo no toggle Mensal/Anual */
+    .toggle-active { 
+        background-color: white !important; 
+        /* Corrigido de 'shadow' para 'box-shadow' */
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1) !important; 
+        color: #25AAE2 !important; 
+    }
+
+    /* Sombra profunda para o Modal de confirmação */
+    #confirmPlanModal .modal-content { 
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); 
+        border: none;
+    }
+</style>
+
+<script>
+    let currentPlan = 'essential';
+    let currentCycle = 'mensal';
+
+    const prices = {
+        essential: { mensal: 99, anual: 79.20 }, // 99 - 20%
+        professional: { mensal: 149, anual: 119.20 } // 149 - 20%
+    };
+
+    function openModal(plano) {
+        currentPlan = plano;
+        document.getElementById('selectedPlanName').innerText = plano.toUpperCase();
+        
+        // Ajusta as features no modal dependendo do plano
+        if(plano === 'professional') {
+            document.getElementById('feat3').innerText = "IA de Fidelização Inclusa";
+        } else {
+            document.getElementById('feat3').innerText = "Suporte OdontoClinics";
+        }
+
+        updateUI();
+        new bootstrap.Modal(document.getElementById('confirmPlanModal')).show();
+    }
+
+    function updateCycle(cycle) {
+        currentCycle = cycle;
+        document.getElementById('btnMensal').classList.toggle('toggle-active', cycle === 'mensal');
+        document.getElementById('btnAnual').classList.toggle('toggle-active', cycle === 'anual');
+        updateUI();
+    }
+
+    function updateUI() {
+        const price = prices[currentPlan][currentCycle];
+        document.getElementById('displayPrice').innerText = `R$ ${price.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+        document.getElementById('cycleLabel').innerText = currentCycle === 'mensal' ? 'Cobrança Mensal' : 'Cobrança Anual (Pagamento Único)';
+        
+        // Atualiza o link final com o plano e o ciclo
+        const baseUrl = "{% url 'criar_pagamento' %}";
+        document.getElementById('finalCheckoutBtn').setAttribute('href', `${baseUrl}?plano=${currentPlan}&ciclo=${currentCycle}`);
+    }
+
+    // Vincula aos botões de "Assinar" dos cards
+    document.querySelectorAll('.btn-assinar').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const plano = new URLSearchParams(this.getAttribute('href').split('?')[1]).get('plano');
+            openModal(plano);
+        });
+    });
+</script>
+{% endblock %}

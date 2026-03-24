@@ -1,0 +1,175 @@
+{% extends 'home/base.html' %}
+
+{% block title %}Sobre | OdontoClinics{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-5 px-md-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            
+            <div class="text-center mb-5">
+                <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill mb-3 fw-bold">Versão 2.0.4</span>
+                <h2 class="fw-black text-dark display-5 mb-2">Inovação em Gestão Odontológica</h2>
+                <p class="text-muted mx-auto" style="max-width: 600px;">
+                    O OdontoClinics não é apenas um software, é um ecossistema projetado para alta performance e cuidado humano.
+                </p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm rounded-4 h-100 bg-white p-4 text-center">
+                        <div class="avatar-wrapper mb-3 mx-auto">
+                            <div class="avatar-main bg-primary text-white">
+                                <span class="fs-2 fw-bold">RF</span>
+                            </div>
+                        </div>
+                        <h5 class="fw-bold text-dark mb-1">Rodrigo Faria</h5>
+                        <p class="text-muted x-small text-uppercase fw-bold mb-3">Architect & Lead Developer</p>
+                        <p class="small text-secondary mb-4">
+                            Especialista em soluções escaláveis para o setor de saúde, unindo Python e IA para automatizar clínicas.
+                        </p>
+                        <div class="d-flex justify-content-center gap-3">
+                            <a href="#" class="btn btn-light btn-sm rounded-circle shadow-sm text-muted"><i class="bi bi-github"></i></a>
+                            <a href="#" class="btn btn-light btn-sm rounded-circle shadow-sm text-muted"><i class="bi bi-linkedin"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-8">
+                    <div class="card border-0 shadow-sm rounded-4 h-100 bg-white p-4 p-md-5">
+                        <h4 class="fw-bold text-dark mb-4">A Engenharia por trás do Sistema</h4>
+                        
+                        <div class="row g-4">
+                            <div class="col-sm-6">
+                                <div class="d-flex align-items-start gap-3">
+                                    <div class="icon-box bg-blue-soft text-primary">
+                                        <i class="bi bi-layers-half"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="fw-bold mb-1">Arquitetura Multi-Tenant</h6>
+                                        <p class="x-small text-muted mb-0">Segurança total e isolamento de dados para cada clínica.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="d-flex align-items-start gap-3">
+                                    <div class="icon-box bg-orange-soft text-warning">
+                                        <i class="bi bi-cpu"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="fw-bold mb-1">Processamento Local</h6>
+                                        <p class="x-small text-muted mb-0">Otimizado para rodar localmente com privacidade total via IA.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="d-flex align-items-start gap-3">
+                                    <div class="icon-box bg-green-soft text-success">
+                                        <i class="bi bi-whatsapp"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="fw-bold mb-1">Automação de Mensagens</h6>
+                                        <p class="x-small text-muted mb-0">Integração nativa com Evolution API para avisos automáticos.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="d-flex align-items-start gap-3">
+                                    <div class="icon-box bg-purple-soft text-purple">
+                                        <i class="bi bi-database-check"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="fw-bold mb-1">Stack de Elite</h6>
+                                        <p class="x-small text-muted mb-0">Construído sobre Django 5, PostgreSQL e Python 3.12.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-5 opacity-10">
+
+                        <div class="bg-light p-3 rounded-4 d-flex align-items-center justify-content-between">
+                            <span class="small text-muted fw-medium">Status do Sistema: <span class="text-success">● Online</span></span>
+                            <a href="{% url 'preview_dados_ia' %}" class="btn-ia-payload" target="_blank">
+                                <i class="bi bi-code-square me-1"></i> IA PAYLOAD
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-5 opacity-50">
+                <p class="x-small mb-0">© 2026 OdontoClinics | Desenvolvido com foco em excelência.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* FUNDO COMPLETO SEM CORTE */
+    body, #content-wrapper, .container-fluid { 
+        background-color: #f1f5f9 !important; 
+        min-height: 100vh;
+    }
+
+    .fw-black { font-weight: 900; }
+    .x-small { font-size: 0.75rem; line-height: 1.4; }
+
+    /* Estilo do Avatar */
+    .avatar-wrapper {
+        width: 80px;
+        height: 80px;
+        padding: 5px;
+        border: 2px solid #25AAE2;
+        border-radius: 24px;
+    }
+    .avatar-main {
+        width: 100%;
+        height: 100%;
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #25AAE2 0%, #1a82ad 100%);
+    }
+
+    /* Icon Boxes */
+    .icon-box {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+        flex-shrink: 0;
+    }
+
+    /* Cores Suaves SaaS */
+    .bg-blue-soft { background: rgba(37, 170, 226, 0.1); }
+    .bg-orange-soft { background: rgba(255, 193, 7, 0.1); }
+    .bg-green-soft { background: rgba(25, 135, 84, 0.1); }
+    .bg-purple-soft { background: rgba(111, 66, 193, 0.1); }
+    .text-purple { color: #6f42c1; }
+
+    /* Botão IA Payload Minimalista */
+    .btn-ia-payload {
+        font-size: 0.65rem;
+        font-weight: 800;
+        color: #adb5bd;
+        text-decoration: none;
+        letter-spacing: 1px;
+        transition: all 0.3s;
+    }
+    .btn-ia-payload:hover { color: #25AAE2; }
+
+    /* Animação */
+    .card {
+        animation: slideUp 0.6s ease-out forwards;
+    }
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(15px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+{% endblock %}

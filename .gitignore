@@ -1,0 +1,26 @@
+# Ambiente virtual
+.venv/
+venv/
+
+# Arquivo de variáveis de ambiente
+.env
+
+# Arquivos de banco local
+db.sqlite3
+
+# Uploads e mídia local
+media/
+
+# Arquivos estáticos coletados
+staticfiles/
+
+# Cache do Django
+__pycache__/
+
+# Arquivos do VS Code
+.vscode/
+
+# Arquivos temporários
+*.log
+*.pyc
+.DS_Store

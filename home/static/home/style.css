@@ -1,0 +1,174 @@
+:root {
+    --tema: #25AAE2;
+    --tema-escuro: #1b8bbd;
+    --tema-claro: #e6f7fd;
+}
+
+
+body {
+    background-color: #f5f5f5;
+    font-family: Arial, sans-serif;
+    margin: 40px;
+}
+
+header h1 {
+    color: #333;
+}
+
+nav a {
+    margin-right: 10px;
+    text-decoration: none;
+    color: #25AAE2;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+.dashboard-square {
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.action-square {
+    height: 160px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: transform .2s ease-in-out;
+}
+
+.action-square:hover {
+    transform: translateY(-5px);
+}
+
+.table .btn {
+    padding: 4px 8px;
+    font-size: 0.85rem;
+}
+
+.table i {
+    font-size: 1rem;
+}
+
+/* Títulos principais */
+h1,
+h2,
+h3 {
+    color: var(--tema);
+}
+
+/* Botões principais */
+.btn-primary,
+.btn-outline-primary:hover {
+    background-color: var(--tema);
+    border-color: var(--tema);
+}
+
+.btn-outline-primary {
+    color: var(--tema);
+    border-color: var(--tema);
+}
+
+/* Botões secundários */
+.btn-outline-secondary:hover {
+    background-color: var(--tema);
+    border-color: var(--tema);
+    color: white;
+}
+
+/* Links */
+a {
+    color: var(--tema);
+}
+
+a:hover {
+    color: var(--tema-escuro);
+}
+
+/* Barras horizontais */
+hr {
+    border-top: 2px solid var(--tema);
+}
+
+/* Cards */
+.card {
+    border-color: var(--tema-claro);
+}
+
+.card-header {
+    background-color: var(--tema-claro);
+    color: var(--tema);
+}
+
+/* Efeito hover igual aos botões da dashboard (levemente sobe) */
+.btn-efeito {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-efeito:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Customização do Modal OdontoClinics */
+#modalReagendar .modal-content {
+    border-radius: 1.25rem;
+    /* rounded-4 */
+    border: none;
+}
+
+#modalReagendar .modal-header {
+    border-bottom: 1px solid var(--tema-claro);
+    background-color: #ffffff;
+    border-top-left-radius: 1.25rem;
+    border-top-right-radius: 1.25rem;
+}
+
+#modalReagendar .modal-header i {
+    color: var(--tema);
+    /* Usa seu #25AAE2 */
+}
+
+#modalReagendar .btn-primary {
+    background-color: var(--tema) !important;
+    border-color: var(--tema) !important;
+    transition: all 0.2s ease;
+}
+
+#modalReagendar .btn-primary:hover {
+    background-color: var(--tema-escuro) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 170, 226, 0.3);
+}
+
+#modalReagendar .btn-light {
+    background-color: var(--tema-claro);
+    color: var(--tema);
+    border: none;
+}
+
+#modalReagendar .btn-light:hover {
+    background-color: #d1f0fb;
+}
+
+/* Estilo do Input de Hora */
+#inputHoraModal {
+    border: 2px solid var(--tema-claro);
+    color: #334155;
+    font-weight: 600;
+}
+
+#inputHoraModal:focus {
+    border-color: var(--tema);
+    box-shadow: 0 0 0 0.25rem rgba(37, 170, 226, 0.1);
+}
+
+/* Destaque para os nomes no texto do modal */
+#nomePacienteModal,
+#dataConsultaModal {
+    color: var(--tema);
+    font-weight: 700;
+}

@@ -1,0 +1,310 @@
+{% extends 'home/base.html' %}
+
+{% block title %}Editar Paciente{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4" style="background-color: #f8f9fa; min-height: 100vh;">
+
+    <div class="row mb-4 px-3">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-1">
+                        <li class="breadcrumb-item"><a href="/pacientes/"
+                                class="text-decoration-none text-muted small">Pacientes</a></li>
+                        <li class="breadcrumb-item active fw-bold text-primary small">Editar Cadastro</li>
+                    </ol>
+                </nav>
+                <h2 class="fw-bold text-dark mb-0">Paciente: <span class="text-primary">{{ paciente.nome }}</span></h2>
+            </div>
+            <div class="d-flex gap-2">
+                <a href="/pacientes/" class="btn btn-white border shadow-sm rounded-pill px-4 fw-bold text-muted">
+                    <i class="bi bi-arrow-left me-1"></i> Voltar
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {% if messages %}
+    <div class="px-3">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show rounded-4 shadow-sm border-0 mb-4"
+            role="alert">
+            <i class="bi bi-info-circle me-2"></i> {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="row justify-content-center px-3">
+        <div class="col-lg-12 col-xl-12">
+            <form method="POST" id="formEditarPaciente" novalidate>
+                {% csrf_token %}
+
+                <div class="card border-0 shadow-sm rounded-4 mb-4 card-accent-blue">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-4">
+                            <div class="bg-primary bg-opacity-10 p-2 rounded-3 me-3">
+                                <i class="bi bi-person-vcard text-primary fs-4"></i>
+                            </div>
+                            <h5 class="fw-bold mb-0">Informações Pessoais</h5>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <label class="form-label fw-bold small text-muted">NOME COMPLETO</label>
+                                {{ form.nome }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small text-muted">CPF</label>
+                                {{ form.cpf }}
+                                <div id="cpf-error" class="text-danger x-small fw-bold mt-1" style="display:none;">
+                                    <i class="bi bi-x-circle"></i> CPF Inválido
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small text-muted">DATA DE NASCIMENTO</label>
+                                {{ form.data_nascimento }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small text-muted">E-MAIL</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0 text-muted"><i
+                                            class="bi bi-envelope"></i></span>
+                                    {{ form.email }}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small text-muted">TELEFONE / WHATSAPP</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0"><i
+                                            class="bi bi-whatsapp text-success"></i></span>
+                                    {{ form.telefone }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card border-0 shadow-sm rounded-4 mb-4 card-accent-purple">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-4">
+                            <div class="bg-info bg-opacity-10 p-2 rounded-3 me-3">
+                                <i class="bi bi-geo-alt text-info fs-4"></i>
+                            </div>
+                            <h5 class="fw-bold mb-0">Localização & Endereço</h5>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold small text-primary">CEP (Busca Automática)</label>
+                                {{ form.cep }}
+                            </div>
+                            <div class="col-md-8">
+                                <label class="form-label fw-bold small text-muted">LOGRADOURO</label>
+                                {{ form.endereco }}
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold small text-muted">Nº</label>
+                                {{ form.numero }}
+                            </div>
+                            <div class="col-md-5">
+                                <label class="form-label fw-bold small text-muted">BAIRRO</label>
+                                {{ form.bairro }}
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold small text-muted">CIDADE</label>
+                                {{ form.cidade }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card border-0 shadow-sm rounded-4 mb-4 card-accent-orange">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-warning bg-opacity-10 p-2 rounded-3 me-3">
+                                <i class="bi bi-journal-text text-warning fs-4"></i>
+                            </div>
+                            <h5 class="fw-bold mb-0">Notas Clínicas</h5>
+                        </div>
+                        <p class="text-muted small mb-3">Resumo de observações permanentes deste paciente.</p>
+                        {{ form.observacoes_clinicas }}
+                    </div>
+                </div>
+
+                <div class="card border-0 shadow rounded-4 p-4 bg-white mb-5">
+                    <div class="row align-items-center">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <button type="button" class="btn btn-link text-danger fw-bold text-decoration-none p-0"
+                                data-bs-toggle="modal" data-bs-target="#modalExcluir">
+                                <i class="bi bi-trash me-2"></i>Excluir permanentemente este paciente
+                            </button>
+                        </div>
+                        <div class="col-md-6 text-md-end">
+                            <div class="d-flex flex-column flex-md-row gap-2 justify-content-md-end">
+                                <a href="/pacientes/" class="btn btn-light rounded-pill px-4 fw-bold text-muted border">
+                                    Cancelar
+                                </a>
+                                <button type="submit" id="btnSalvar"
+                                    class="btn btn-primary rounded-pill px-4 py-2 fw-bold shadow-sm">
+                                    <i class="bi bi-check-circle me-1"></i> SALVAR
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalExcluir" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0 shadow-lg">
+            <div class="modal-body text-center p-5">
+                <div class="bg-danger bg-opacity-10 p-3 rounded-circle d-inline-block mb-4">
+                    <i class="bi bi-exclamation-triangle text-danger display-4"></i>
+                </div>
+                <h4 class="fw-bold">Excluir Paciente?</h4>
+                <p class="text-muted">Esta ação é permanente e removerá todos os dados de <strong>{{ paciente.nome }}</strong>.</p>
+                <div class="d-flex justify-content-center gap-3 mt-4">
+                    <button type="button" class="btn btn-light rounded-pill px-4 fw-bold"
+                        data-bs-dismiss="modal">Cancelar</button>
+                    <form action="{% url 'excluir_paciente' paciente.id %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger rounded-pill px-4 fw-bold shadow-sm">Confirmar Exclusão</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
+<script>
+    const cepInput = document.getElementById('id_cep');
+    if (cepInput) {
+        cepInput.addEventListener('blur', function () {
+            pesquisacep(this.value);
+        });
+    }
+
+    jQuery(document).ready(function ($) {
+        $('#id_telefone').mask('(00) 00000-0000');
+        $('#id_cep').mask('00000-000');
+        $('#id_cpf').mask('000.000.000-00');
+
+        function validarCPF(cpf) {
+            cpf = cpf.replace(/[^\d]+/g, '');
+            if (cpf == '' || cpf.length != 11 || /^(\d)\1{10}$/.test(cpf)) return false;
+            var add = 0;
+            for (var i = 0; i < 9; i++) add += parseInt(cpf.charAt(i)) * (10 - i);
+            var rev = 11 - (add % 11);
+            if (rev == 10 || rev == 11) rev = 0;
+            if (rev != parseInt(cpf.charAt(9))) return false;
+            add = 0;
+            for (var i = 0; i < 10; i++) add += parseInt(cpf.charAt(i)) * (11 - i);
+            rev = 11 - (add % 11);
+            if (rev == 10 || rev == 11) rev = 0;
+            if (rev != parseInt(cpf.charAt(10))) return false;
+            return true;
+        }
+
+        $('#id_cpf').on('blur', function () {
+            if ($(this).val() !== "" && !validarCPF($(this).val())) {
+                $(this).addClass('is-invalid');
+                $('#cpf-error').show();
+                $('#btnSalvar').prop('disabled', true).addClass('opacity-50');
+            } else {
+                $(this).removeClass('is-invalid');
+                $('#cpf-error').hide();
+                $('#btnSalvar').prop('disabled', false).removeClass('opacity-50');
+            }
+        });
+    });
+
+    function pesquisacep(valor) {
+        var cep = valor.replace(/\D/g, '');
+        if (cep != "") {
+            var validacep = /^[0-9]{8}$/;
+            if (validacep.test(cep)) {
+                ['id_endereco', 'id_bairro', 'id_cidade'].forEach(id => {
+                    if (document.getElementById(id)) document.getElementById(id).value = "Carregando...";
+                });
+                var script = document.createElement('script');
+                script.src = 'https://viacep.com.br/ws/' + cep + '/json/?callback=meu_callback';
+                document.body.appendChild(script);
+            }
+        }
+    };
+
+    function meu_callback(conteudo) {
+        if (!("erro" in conteudo)) {
+            document.getElementById('id_endereco').value = (conteudo.logradouro);
+            document.getElementById('id_bairro').value = (conteudo.bairro);
+            document.getElementById('id_cidade').value = (conteudo.localidade);
+            setTimeout(() => { document.getElementById('id_numero').focus(); }, 100);
+        } else {
+            alert("CEP não encontrado.");
+        }
+    }
+</script>
+
+<style>
+    /* Estilos de Acento Lateral */
+    .card-accent-blue { border-left: 6px solid #0d6efd !important; }
+    .card-accent-purple { border-left: 6px solid #6f42c1 !important; }
+    .card-accent-orange { border-left: 6px solid #fd7e14 !important; }
+
+    /* Forçar estilização dos campos renderizados pelo Django */
+    input, select, textarea {
+        display: block;
+        width: 100%;
+        padding: 0.75rem 1rem !important;
+        font-size: 0.95rem !important;
+        color: #334155 !important;
+        background-color: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 12px !important;
+        transition: all 0.2s;
+    }
+
+    input:focus, textarea:focus {
+        border-color: #0d6efd !important;
+        box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.1) !important;
+        outline: none !important;
+    }
+
+    /* Ajuste específico para Input Groups (E-mail e WhatsApp) */
+    .input-group .form-control {
+        border-top-left-radius: 0 !important;
+        border-bottom-left-radius: 0 !important;
+    }
+
+    .input-group-text {
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 12px 0 0 12px !important;
+        background-color: #f8fafc !important;
+    }
+
+    .btn-white {
+        background-color: #fff;
+        color: #64748b;
+        border: 1px solid #e2e8f0 !important;
+    }
+
+        /* Garante que o ícone do Input Group também mude de cor se houver erro */
+    .input-group:has(.is-invalid) .input-group-text {
+        border-color: #dc3545 !important;
+        color: #dc3545 !important;
+    }
+
+    textarea { height: 120px !important; resize: none; }
+    .x-small { font-size: 0.75rem; }
+    .breadcrumb-item+.breadcrumb-item::before { content: "/"; color: #cbd5e1; }
+</style>
+{% endblock %}

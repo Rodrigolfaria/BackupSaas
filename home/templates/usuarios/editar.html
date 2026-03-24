@@ -1,0 +1,133 @@
+{% extends 'home/base.html' %}
+
+{% block title %}Editar Acesso | {{ usuario.username }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid pt-5 pb-5" style="background-color: #f8f9fa; min-height: 100vh;">
+    
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-8">
+
+            <div class="mb-4 px-2">
+                <a href="javascript:history.back()" class="text-decoration-none text-muted small fw-bold">
+                    <i class="bi bi-arrow-left me-1"></i> VOLTAR PARA A LISTA
+                </a>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="card-header bg-white border-0 pt-4 px-4 pb-2">
+                    <div class="d-flex align-items-center">
+                        <div class="avatar-edit me-3 bg-primary text-white shadow-sm">
+                            {{ usuario.username|slice:":1"|upper }}
+                        </div>
+                        <div>
+                            <h5 class="fw-bold text-dark mb-0">Configurações de Acesso</h5>
+                            <p class="text-muted small mb-0">Usuário: <span class="badge bg-light text-dark border">@{{ usuario.username }}</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body p-4">
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-dark small text-uppercase" style="letter-spacing: 0.5px;">Cargo e Permissão</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0 rounded-start-3">
+                                    <i class="bi bi-shield-lock text-primary"></i>
+                                </span>
+                                <select name="cargo" class="form-select border-start-0 py-2" style="border-radius: 0 10px 10px 0 !important;">
+                                    <option value="admin" {% if usuario.profile.cargo == "admin" %}selected{% endif %}>Administrador (Acesso Total)</option>
+                                    <option value="dentista" {% if usuario.profile.cargo == "dentista" %}selected{% endif %}>Dentista (Atendimento)</option>
+                                    <option value="recepcao" {% if usuario.profile.cargo == "recepcao" %}selected{% endif %}>Recepção (Agendamentos)</option>
+                                    <option value="financeiro" {% if usuario.profile.cargo == "financeiro" %}selected{% endif %}>Financeiro (Fluxo de Caixa)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="p-3 rounded-4 bg-white mb-4 border border-1 shadow-sm">
+                            <div class="form-check form-switch d-flex justify-content-between align-items-center ps-0">
+                                <div>
+                                    <label class="fw-bold text-dark d-block mb-0" for="ativoCheck">Acesso ao Sistema</label>
+                                    <span class="text-muted small">Se desativado, o usuário perderá o acesso instantaneamente.</span>
+                                </div>
+                                <input type="checkbox" name="ativo" class="form-check-input ms-0 mt-0 shadow-none custom-switch" 
+                                    role="switch" id="ativoCheck" {% if usuario.profile.ativo %}checked{% endif %}>
+                            </div>
+                        </div>
+
+                        <div class="row g-2 pt-2">
+                            <div class="col-8">
+                                <button type="submit" class="btn btn-primary w-100 rounded-pill py-2 fw-bold shadow-sm">
+                                    Salvar Alterações
+                                </button>
+                            </div>
+                            <div class="col-4">
+                                <a href="javascript:history.back()" class="btn btn-white border w-100 rounded-pill py-2 text-muted fw-bold">
+                                    Cancelar
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="mt-4 p-3 bg-white rounded-4 shadow-sm border-0 d-flex align-items-center mx-1">
+                <div class="bg-primary bg-opacity-10 p-2 rounded-circle me-3">
+                    <i class="bi bi-info-circle text-primary fs-5"></i>
+                </div>
+                <p class="mb-0 text-muted small" style="line-height: 1.4;">
+                    <strong>Nota:</strong> Dados como nome real e senha devem ser alterados pelo próprio usuário no menu "Meu Perfil" por questões de privacidade.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* ESTILOS PADRONIZADOS */
+    .avatar-edit { 
+        width: 48px; 
+        height: 48px; 
+        border-radius: 12px; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        font-size: 1.4rem; 
+        font-weight: 800; 
+    }
+    
+    .form-select {
+        border-radius: 10px !important;
+        border: 1px solid #e2e8f0 !important;
+        font-size: 0.95rem;
+    }
+    
+    .form-select:focus {
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1) !important;
+        border-color: #3b82f6 !important;
+    }
+
+    .custom-switch {
+        width: 2.8em !important;
+        height: 1.4em !important;
+        cursor: pointer;
+    }
+
+    .form-check-input:checked {
+        background-color: #10b981 !important;
+        border-color: #10b981 !important;
+    }
+
+    .btn-white {
+        background-color: #fff;
+        color: #64748b;
+    }
+
+    .btn-white:hover {
+        background-color: #f8fafc;
+        color: #334155;
+    }
+</style>
+{% endblock %}

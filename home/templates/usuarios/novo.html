@@ -1,0 +1,84 @@
+{% extends 'home/base.html' %}
+
+{% block title %}Criar Usuário{% endblock %}
+
+{% block content %}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Criar Novo Usuário</h5>
+                </div>
+
+                <div class="card-body">
+
+                    <form method="POST" novalidate>
+                        {% csrf_token %}
+
+                        <!-- Usuário -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Usuário</label>
+                            {{ form.username }}
+                        </div>
+
+                        <!-- Nome -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Nome</label>
+                            {{ form.first_name }}
+                        </div>
+
+                        <!-- Sobrenome -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Sobrenome</label>
+                            {{ form.last_name }}
+                        </div>
+
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Email</label>
+                            {{ form.email }}
+                        </div>
+
+                        <!-- Cargo -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Cargo</label>
+                            {{ form.cargo }}
+                        </div>
+
+                        <!-- Ativo -->
+                        <div class="form-check mb-3">
+                            {{ form.ativo }}
+                            <label class="form-check-label">
+                                Usuário Ativo
+                            </label>
+                        </div>
+
+                        <!-- Senha -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Senha</label>
+                            {{ form.password1 }}
+                        </div>
+
+                        <!-- Confirmar Senha -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Confirme a Senha</label>
+                            {{ form.password2 }}
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100">
+                            Criar Usuário
+                        </button>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}  

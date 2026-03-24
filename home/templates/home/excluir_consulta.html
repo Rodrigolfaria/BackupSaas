@@ -1,0 +1,131 @@
+{% extends 'home/base.html' %}
+
+{% block title %}Excluir Consulta{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-6">
+
+            <nav aria-label="breadcrumb" class="mb-3">
+                <ol class="breadcrumb small">
+                    <li class="breadcrumb-item"><a href="/dashboard/" class="text-decoration-none">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="/consultas/detalhes/{{ consulta.id|default:'' }}/"
+                            class="text-decoration-none">Detalhes</a></li>
+                    <li class="breadcrumb-item active">Confirmar Exclusão</li>
+                </ol>
+            </nav>
+
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="card-header bg-danger bg-opacity-10 border-0 pt-5 pb-4 text-center">
+                    <!-- <div class="bg-danger bg-opacity-20 d-inline-block p-3 rounded-circle mb-3">
+                        <i class="bi bi-calendar-x-fill text-danger fs-1"></i>
+                    </div> -->
+                    <h3 class="fw-bold text-danger mb-1">Excluir Consulta?</h3>
+                    <p class="text-muted px-4 small">Esta ação é permanente e removerá este agendamento do seu histórico
+                        clínico e financeiro.</p>
+                </div>
+
+                <div class="card-body p-4 pt-2">
+                    <div class="bg-light rounded-4 p-4 mb-4 border border-dashed">
+                        <table class="table table-borderless align-middle mb-0">
+                            <tbody>
+                                <tr>
+                                    <td class="ps-0 text-muted small fw-bold text-uppercase" style="width: 40%;">
+                                        Paciente:</td>
+                                    <td class="pe-0 text-end fw-bold text-dark">
+                                        {{ paciente.nome|default:"Não identificado" }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-0 text-muted small fw-bold text-uppercase">Data e Hora:</td>
+                                    <td class="pe-0 text-end fw-bold text-dark">
+                                        {{ consulta.data_hora|date:"d/m/Y \à\s H:i"|default:"Data não informada" }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-0 text-muted small fw-bold text-uppercase">Valor:</td>
+                                    <td class="pe-0 text-end fw-bold text-success">
+                                        R$ {{ consulta.valor|default:"0,00" }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-0 text-muted small fw-bold text-uppercase pt-2">Status:</td>
+                                    <td class="pe-0 text-end pt-2">
+                                        <span
+                                            class="badge bg-secondary bg-opacity-10 text-secondary border rounded-pill px-3">
+                                            {{ consulta.status|default:"Indefinido" }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="d-grid gap-3">
+                            <button type="submit" class="btn btn-danger btn-lg rounded-pill py-3 fw-bold shadow-sm">
+                                <i class="bi bi-trash3 me-2"></i> Confirmar Exclusão
+                            </button>
+                            <a href="/consultas/detalhes/{{ consulta.id|default:'' }}/"
+                                class="btn btn-light border btn-lg rounded-pill py-3 fw-bold text-muted">
+                                Cancelar e Manter
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card-footer bg-white border-0 pb-4 text-center">
+                    <div class="alert alert-warning border-0 small mb-0 py-2 rounded-3">
+                        <i class="bi bi-info-circle me-1"></i>
+                        <strong>Dica:</strong> Se o paciente apenas desmarcou, considere alterar o status para
+                        "Cancelado".
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .border-dashed {
+        border-style: dashed !important;
+        border-width: 2px !important;
+        border-color: #dee2e6 !important;
+    }
+
+    .breadcrumb-item+.breadcrumb-item::before {
+        content: "›";
+        font-size: 1.2rem;
+        vertical-align: middle;
+    }
+
+    .btn-danger {
+        transition: all 0.3s ease;
+    }
+
+    .btn-danger:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(220, 53, 69, 0.3) !important;
+    }
+
+    .btn-light:hover {
+        background-color: #f1f5f9 !important;
+        color: #000 !important;
+    }
+
+    .table td {
+        padding: 8px 0;
+    }
+
+    .badge {
+        font-size: 0.75rem !important;
+    }
+</style>
+{% endblock %}

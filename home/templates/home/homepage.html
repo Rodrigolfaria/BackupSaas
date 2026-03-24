@@ -1,0 +1,558 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OdontoClinics | Gestão Odontológica Inteligente</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <style>
+        :root {
+            --slate-900: #0f172a;
+            --slate-600: #475569;
+            --blue-600: #2563eb;
+            --cyan-500: #06b6d4;
+            --accent: #25AAE2;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: #ffffff;
+            color: var(--slate-900);
+            overflow-x: hidden;
+        }
+
+        /* --- NAVBAR --- */
+        .navbar-premium {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .text-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            color: var(--slate-900);
+            text-decoration: none;
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, #25AAE2 0%, #0d6efd 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        /* --- HERO SECTION --- */
+        .hero-section {
+            padding: 100px 0 60px 0;
+            background: radial-gradient(circle at top right, rgba(37, 170, 226, 0.08), transparent),
+                        radial-gradient(circle at bottom left, rgba(13, 110, 253, 0.05), transparent);
+        }
+
+        .hero-badge {
+            background: #f1f5f9;
+            color: var(--blue-600);
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: inline-block;
+            margin-bottom: 20px;
+            border: 1px solid rgba(37, 170, 226, 0.2);
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.04em;
+            margin-bottom: 24px;
+        }
+
+        .btn-cta-primary {
+            background: var(--slate-900);
+            color: white;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            border: none;
+        }
+
+        .btn-cta-primary:hover {
+            background: #25AAE2;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(37, 170, 226, 0.3);
+        }
+
+        /* --- FEATURE CARDS --- */
+        .feature-card {
+            background: #fff;
+            border: 1px solid #f1f5f9;
+            padding: 40px;
+            border-radius: 24px;
+            transition: all 0.3s;
+            height: 100%;
+            text-align: left;
+        }
+
+        .feature-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+            transform: translateY(-5px);
+        }
+
+        .icon-box {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #25AAE2, #0d6efd);
+            color: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 24px;
+        }
+
+        /* --- JORNADA PARA O SUCESSO (MELHORADA) --- */
+        .journey-step-card {
+            background: #fff;
+            border-radius: 25px;
+            padding: 35px;
+            border: 1px solid #f1f5f9;
+            height: 100%;
+            transition: 0.3s;
+            position: relative;
+        }
+        .journey-step-card:hover { border-color: var(--blue-600); transform: translateY(-5px); }
+        .step-num-visual {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: #f1f5f9;
+            position: absolute;
+            top: 10px;
+            right: 25px;
+            z-index: 0;
+        }
+        .journey-content { position: relative; z-index: 1; }
+        .journey-icon-new {
+            width: 55px; height: 55px;
+            background: var(--slate-900);
+            color: white;
+            border-radius: 15px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.4rem; margin-bottom: 20px;
+        }
+
+        /* --- PREÇOS (ESTILO DA IMAGEM, MAS MENOR/MENOS AGRESSIVO) --- */
+        .pricing-section {
+            padding: 80px 0;
+            background-color: #f8fafc;
+        }
+
+        .pricing-toggle {
+            background: #e2e8f0;
+            padding: 4px;
+            border-radius: 50px;
+            display: inline-flex;
+            margin-bottom: 60px;
+        }
+
+        .pricing-toggle button {
+            border: none;
+            padding: 8px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: 0.3s;
+            background: transparent;
+        }
+
+        .pricing-toggle button.active {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            color: var(--blue-600);
+        }
+
+        .card-plan {
+            border-radius: 40px; 
+            border: 2px solid #eef2f6;
+            padding: 2.2rem 1.8rem !important; /* Reduzido para ficar menos agressivo */
+            background: #fff;
+            transition: all 0.3s ease;
+            position: relative;
+            max-width: 380px; /* Limita a largura */
+            margin: 0 auto;
+        }
+
+        .card-plan.popular {
+            border: 2.5px solid #2563eb !important;
+            transform: scale(1.03); /* Menos agressivo que o 1.05 */
+            z-index: 2;
+        }
+
+        .badge-popular {
+            position: absolute;
+            top: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(90deg, #3b82f6, #06b6d4);
+            color: white;
+            padding: 6px 20px;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+
+        .plan-title {
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            font-size: 1rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .plan-title-blue { color: #2563eb; }
+        .plan-title-gray { color: #64748b; }
+
+        .price-text {
+            font-size: 2.8rem; /* Reduzido de 3.5rem */
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            color: var(--slate-900);
+        }
+
+        .bi-check-circle-fill.text-success-custom {
+            color: #4ade80 !important;
+            font-size: 1.2rem;
+        }
+
+        .btn-gradient-blue {
+            background: linear-gradient(90deg, #2563eb, #58a9f3);
+            border: none;
+            color: white;
+            padding: 14px !important;
+            border-radius: 45px !important;
+            font-weight: 700;
+            font-size: 1.05rem;
+            transition: all 0.3s;
+            display: block;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .btn-gradient-blue:hover { filter: brightness(1.1); color: white; transform: translateY(-2px); }
+
+        .btn-outline-custom {
+            border: 2px solid #e2e8f0;
+            color: var(--slate-900);
+            padding: 14px !important;
+            border-radius: 45px !important;
+            font-weight: 700;
+            text-decoration: none;
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .btn-outline-custom:hover { background: #f8fafc; border-color: #cbd5e1; }
+
+        /* --- FOOTER --- */
+        .footer-premium {
+            background: #0f172a;
+            color: #94a3b8;
+            padding: 80px 0 30px 0;
+        }
+        .footer-link { color: #94a3b8; text-decoration: none; transition: 0.3s; }
+        .footer-link:hover { color: #25AAE2; }
+        .social-icon { font-size: 1.5rem; color: white; transition: 0.3s; }
+        .social-icon:hover { color: #E1306C; transform: translateY(-3px); }
+
+        @media (max-width: 992px) {
+            .hero-title { font-size: 3rem; }
+            .card-plan.popular { transform: scale(1); margin-top: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar-premium py-3">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a href="/" class="text-logo">
+                Odonto<span class="gradient-text">Clinics</span>
+            </a>
+            <div class="d-flex gap-2">
+                <a href="/login/" class="btn fw-bold text-muted btn-sm">Entrar</a>
+                <a href="{% url 'registro_clinica' %}"  class="btn btn-dark btn-sm px-4 rounded-pill fw-bold">Criar Conta</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero-section text-center">
+        <div class="container px-4">
+            <span class="hero-badge shadow-sm mb-3 d-inline-block">✨ Gestão Odontológica 3.0</span>
+            <h1 class="hero-title mt-2">
+                Sua clínica no <br>
+                <span class="gradient-text">próximo nível.</span>
+            </h1>
+            <p class="hero-subtitle mx-auto text-muted mb-5" style="max-width: 600px; font-size: 1.2rem;">
+                A plataforma completa para dentistas que buscam excelência, organização financeira e crescimento real.
+            </p>
+            
+            <div class="d-flex flex-column flex-md-row justify-content-center gap-3 mt-4">
+                <a href="{% url 'registro_clinica' %}" class="btn-cta-primary d-flex align-items-center justify-content-center">
+                    Começar teste grátis <i class="bi bi-arrow-right ms-2"></i>
+                </a>
+                <a href="#funcionalidades" class="btn btn-outline-secondary px-4 py-3 rounded-pill fw-bold border-2">
+                    Ver demonstração
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <section id="funcionalidades" class="container py-5">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="icon-box"><i class="bi bi-calendar-check"></i></div>
+                    <h4 class="fw-bold">Agenda Inteligente</h4>
+                    <p class="text-muted">Reduza faltas com lembretes automáticos via WhatsApp e organize seu fluxo de pacientes em segundos.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="icon-box"><i class="bi bi-cash-stack"></i></div>
+                    <h4 class="fw-bold">Financeiro Blindado</h4>
+                    <p class="text-muted">Fluxo de caixa, recibos e controle de inadimplência integrados para você nunca mais perder dinheiro.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="icon-box"><i class="bi bi-shield-check"></i></div>
+                    <h4 class="fw-bold">Prontuário Digital</h4>
+                    <p class="text-muted">Segurança total dos dados sob normas da LGPD, histórico clínico completo e acesso de qualquer lugar.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="container py-5 mt-4">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Jornada para o <span class="gradient-text">Sucesso</span></h2>
+            <p class="text-muted">Do cadastro ao faturamento, em 3 passos simples.</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="journey-step-card">
+                    <div class="step-num-visual">01</div>
+                    <div class="journey-content text-start">
+                        <div class="journey-icon-new"><i class="bi bi-person-plus-fill"></i></div>
+                        <h5 class="fw-bold">Cadastro Rápido</h5>
+                        <p class="text-muted small mb-0">Crie sua conta em 30 segundos e configure o nome da sua clínica e especialidades.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="journey-step-card">
+                    <div class="step-num-visual">02</div>
+                    <div class="journey-content text-start">
+                        <div class="journey-icon-new" style="background: var(--blue-600);"><i class="bi bi-magic"></i></div>
+                        <h5 class="fw-bold">Importação e Setup</h5>
+                        <p class="text-muted small mb-0">Nossa IA ajuda a organizar sua agenda e importar seus pacientes antigos via planilha.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="journey-step-card">
+                    <div class="step-num-visual">03</div>
+                    <div class="journey-content text-start">
+                        <div class="journey-icon-new" style="background: var(--cyan-500);"><i class="bi bi-rocket-takeoff-fill"></i></div>
+                        <h5 class="fw-bold">Automação Ativa</h5>
+                        <p class="text-muted small mb-0">O sistema começa a enviar lembretes e buscar pacientes sumidos automaticamente.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="planos" class="pricing-section">
+        <div class="container text-center px-4">
+            <h2 class="fw-bold mb-3" style="font-size: 2.5rem; letter-spacing: -1px;">Planos que crescem com <span class="gradient-text">você</span></h2>
+            
+            <div class="pricing-toggle">
+                <button id="toggleMensal" class="active" onclick="switchPricing('mensal')">Mensal</button>
+                <button id="toggleAnual" onclick="switchPricing('anual')">Anual (-20%)</button>
+            </div>
+
+            <div class="row g-4 justify-content-center align-items-stretch">
+                <div class="col-md-6 col-lg-4">
+                    <div class="card card-plan shadow-sm h-100">
+                        <div class="text-start d-flex flex-column h-100">
+                            <h6 class="plan-title plan-title-gray">ESSENTIAL</h6>
+                            <div class="d-flex align-items-center gap-2 mb-4">
+                                <h2 class="price-text mb-0" id="price-essential">R$ 99</h2>
+                                <span class="text-muted fs-5">/mês</span>
+                            </div>
+
+                            <ul class="list-unstyled mb-5 flex-grow-1">
+                                <li class="mb-3 d-flex align-items-center">
+                                    <i class="bi bi-check-circle-fill text-success-custom me-3"></i>
+                                    <span class="fw-medium">Até 500 pacientes ativos</span>
+                                </li>
+                                <li class="mb-3 d-flex align-items-center">
+                                    <i class="bi bi-check-circle-fill text-success-custom me-3"></i>
+                                    <span class="fw-medium">Agenda Sync (Google)</span>
+                                </li>
+                                <li class="mb-3 d-flex align-items-center">
+                                    <i class="bi bi-check-circle-fill text-success-custom me-3"></i>
+                                    <span class="fw-medium">Prontuário Digital</span>
+                                </li>
+                                <li class="mb-3 d-flex align-items-center">
+                                    <i class="bi bi-check-circle-fill text-success-custom me-3"></i>
+                                    <span class="fw-medium">Lembretes WhatsApp</span>
+                                </li>
+                            </ul>
+                            <a href="{% url 'registro_clinica' %}?plano=essential" class="btn btn-outline-custom w-100">Assinar Agora</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <div class="card card-plan popular shadow-lg h-100">
+                        <div class="badge-popular">MAIS POPULAR</div>
+                        <div class="text-start d-flex flex-column h-100">
+                            <h6 class="plan-title plan-title-blue">PROFESSIONAL</h6>
+                            <div class="d-flex align-items-center gap-2 mb-4">
+                                <h2 class="price-text mb-0" id="price-professional">R$ 149</h2>
+                                <span class="text-muted fs-5">/mês</span>
+                            </div>
+
+                            <ul class="list-unstyled mb-5 flex-grow-1">
+                                <li class="mb-3 d-flex align-items-center">
+                                    <i class="bi bi-check-circle-fill text-success-custom me-3"></i>
+                                    <span class="fw-medium">Pacientes Ilimitados</span>
+                                </li>
+                                <li class="mb-3 d-flex align-items-center">
+                                    <i class="bi bi-check-circle-fill text-success-custom me-3"></i>
+                                    <span class="fw-medium">Lembretes WhatsApp</span>
+                                </li>
+                                <li class="mb-3 d-flex align-items-center">
+                                    <i class="bi bi-check-circle-fill text-success-custom me-3"></i>
+                                    <span class="fw-medium">Gestão Financeira</span>
+                                </li>
+                                <li class="mb-3 d-flex align-items-center">
+                                    <i class="bi bi-check-circle-fill text-success-custom me-3"></i>
+                                    <span class="fw-medium">IA de Fidelização Inclusa</span>
+                                </li>
+                            </ul>
+                            <a href="{% url 'registro_clinica' %}?plano=professional" class="btn btn-gradient-blue w-100">Assinar Agora</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="faq-section py-5">
+        <div class="container px-4">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">Perguntas <span class="gradient-text">Frequentes</span></h2>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="accordion" id="faqAccordion">
+                        <div class="accordion-item shadow-sm border-0 mb-3" style="border-radius: 15px !important; overflow: hidden;">
+                            <h2 class="accordion-header"><button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#c1">Como funciona o teste grátis?</button></h2>
+                            <div id="c1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body text-muted">Você tem 30 dias de acesso total a todas as ferramentas do plano Professional para testar na sua rotina. Não pedimos cartão de crédito para começar.</div></div>
+                        </div>
+                        <div class="accordion-item shadow-sm border-0 mb-3" style="border-radius: 15px !important; overflow: hidden;">
+                            <h2 class="accordion-header"><button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#c4">Posso cancelar a qualquer momento?</button></h2>
+                            <div id="c4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body text-muted">Sim! Não temos fidelidade nos planos mensais. Você pode cancelar sua assinatura diretamente pelo painel a qualquer momento, sem taxas ocultas ou burocracia.</div></div>
+                        </div>
+                        <div class="accordion-item shadow-sm border-0 mb-3" style="border-radius: 15px !important; overflow: hidden;">
+                            <h2 class="accordion-header"><button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#c2">Os dados dos meus pacientes estão seguros?</button></h2>
+                            <div id="c2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body text-muted">Sim! Utilizamos criptografia de ponta a ponta e nossos servidores seguem rigorosamente as normas da LGPD.</div></div>
+                        </div>
+                        <div class="accordion-item shadow-sm border-0 mb-3" style="border-radius: 15px !important; overflow: hidden;">
+                            <h2 class="accordion-header"><button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#c3">Preciso instalar algum software?</button></h2>
+                            <div id="c3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body text-muted">Não. A OdontoClinics é 100% online. Você pode acessar de qualquer dispositivo com internet.</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer-premium">
+        <div class="container px-4">
+            <div class="row g-4 mb-5">
+                <div class="col-lg-4">
+                    <a href="/" class="text-logo text-white d-block mb-3">Odonto<span class="gradient-text">Clinics</span></a>
+                    <p class="small pe-lg-5">Transformando a gestão odontológica através de inteligência artificial e automação simplificada.</p>
+                    <div class="d-flex gap-3 mt-4">
+                        <a href="https://odontoclinics.instagram.com" target="_blank" class="social-icon"><i class="bi bi-instagram"></i></a>
+                        <a href="https://wa.me/5524993267575" target="_blank" class="social-icon"><i class="bi bi-whatsapp"></i></a>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-2">
+                    <h6 class="text-white fw-bold mb-3">Produto</h6>
+                    <ul class="list-unstyled small">
+                        <li class="mb-2"><a href="#funcionalidades" class="footer-link">Recursos</a></li>
+                        <li class="mb-2"><a href="#planos" class="footer-link">Preços</a></li>
+                        <li class="mb-2"><a href="/login/" class="footer-link">Entrar</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-lg-2">
+                    <h6 class="text-white fw-bold mb-3">Legal</h6>
+                    <ul class="list-unstyled small">
+                        <li class="mb-2"><a href="#" class="footer-link">Privacidade</a></li>
+                        <li class="mb-2"><a href="#" class="footer-link">Termos</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4">
+                    <h6 class="text-white fw-bold mb-3">Contato</h6>
+                    <p class="small mb-2"><i class="bi bi-envelope me-2"></i> contato@odontoclinics.com.br</p>
+                    <p class="small"><i class="bi bi-whatsapp me-2"></i> (24) 99326-7575</p>
+                </div>
+            </div>
+            <div class="border-top border-secondary pt-4 text-center">
+                <p class="small mb-0">© 2026 OdontoClinics. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        function switchPricing(cycle) {
+            const isAnual = cycle === 'anual';
+            document.getElementById('toggleMensal').classList.toggle('active', !isAnual);
+            document.getElementById('toggleAnual').classList.toggle('active', isAnual);
+
+            const prices = {
+                essential: isAnual ? "R$ 79" : "R$ 99",
+                professional: isAnual ? "R$ 119,20" : "R$ 149"
+            };
+
+            document.getElementById('price-essential').innerText = prices.essential;
+            document.getElementById('price-professional').innerText = prices.professional;
+        }
+    </script>
+</body>
+</html>
