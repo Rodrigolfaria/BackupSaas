@@ -8,31 +8,43 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 load_dotenv(BASE_DIR / ".env")
 
+
+def env_bool(name, default=False):
+    return os.getenv(name, str(default)).strip().lower() in {"1", "true", "yes", "on"}
+
+
+def env_list(name, default=None):
+    value = os.getenv(name, "")
+    if value:
+        return [item.strip() for item in value.split(",") if item.strip()]
+    return list(default or [])
+
 # -----------------------------
 # SEGURANÇA
 # -----------------------------
 SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-key")
-DEBUG = os.getenv("DEBUG", "True") == "True"
+DEBUG = env_bool("DEBUG", True)
 
-# Domínios autorizados (Adicionado seus novos domínios)
-ALLOWED_HOSTS = [
+# Domínios autorizados
+default_allowed_hosts = [
     "localhost",
     "127.0.0.1",
     "odontoclinics.com",
     "www.odontoclinics.com",
-    'mysite-100d.onrender.com'
+    "mysite-100d.onrender.com",
 ]
+ALLOWED_HOSTS = env_list("ALLOWED_HOSTS", default_allowed_hosts)
 
 RENDER_HOSTNAME = os.getenv("RENDER_EXTERNAL_HOSTNAME")
 if RENDER_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_HOSTNAME)
 
-# Configurações de CSRF (Correção para o erro 403)
-CSRF_TRUSTED_ORIGINS = [
+default_csrf_trusted_origins = [
     "https://odontoclinics.com",
     "https://www.odontoclinics.com",
-    "https://mysite-100d.onrender.com"
+    "https://mysite-100d.onrender.com",
 ]
+CSRF_TRUSTED_ORIGINS = env_list("CSRF_TRUSTED_ORIGINS", default_csrf_trusted_origins)
 
 if RENDER_HOSTNAME:
     CSRF_TRUSTED_ORIGINS.append(f"https://{RENDER_HOSTNAME}")
@@ -172,11 +184,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # ARQUIVOS DE MÍDIA
 # -----------------------------
 MEDIA_URL = '/media/'
-
-if RENDER_HOSTNAME:
-    MEDIA_ROOT = '/data/media'
-else:
-    MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = Path(os.getenv("MEDIA_ROOT", "/data/media" if RENDER_HOSTNAME or not DEBUG else BASE_DIR / "media"))
 
 
 # -----------------------------
@@ -325,6 +333,5 @@ MERCADO_PAGO_ACCESS_TOKEN = os.getenv("MP_ACCESS_TOKEN")
 
 # Caso queira usar a Public Key no front-end via context processor depois
 MERCADO_PAGO_PUBLIC_KEY = "APP_USR-909cc07b-ca8e-42dd-a164-11a3eb264460"
-
 
 
